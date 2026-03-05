@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAI Corp - Pricing</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="wrapper">
+        <header class="main-header">
+            <div class="container">
+                <div class="logo">
+                    <img src="assets/logo.png" alt="MAI Corp Logo" style="height: 50px;">
+                </div>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="pricing.html">Pricing</a></li>
+                        <li><a href="projects.html">Projects</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </nav>
+                <div class="header-cta">
+                    <a href="contact.html" class="button">Get Started</a>
+                </div>
+            </div>
+        </header>
+
+        <aside class="left-sidebar">
+            <nav class="sidebar-nav">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="services.html">Our Services</a></li>
+                    <li><a href="projects.html">Our Projects</a></li>
+                    <li><a href="pricing.html">Pricing Plans</a></li>
+                    <li><a href="about.html">Why Choose Us</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-contact">
+                <h4>Contact Us</h4>
+                <p><span class="icon-highlight">📞</span> 720-990-6781</p>
+                <p><span class="icon-highlight">📩</span> kain.towns@maicorp.online</p>
+            </div>
+            <div class="sidebar-social">
+                <h4>Follow Us</h4>
+                <a href="#" target="_blank">Facebook</a> |
+                <a href="#" target="_blank">Twitter</a> |
+                <a href="#" target="_blank">LinkedIn</a>
+            </div>
+            <div class="sidebar-messages">
+                <h4>Messages <span class="notification-badge">0</span></h4>
+                <p class="status-indicator"><span class="online-dot"></span> MAI Corp Status: Online</p>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <section id="pricing">
+                <div class="container">
+                    <h2>Simple Pricing That Works</h2>
+                    <div class="pricing-grid">
+                        <div class="card fade-in">
+                            <h3>Website Creation</h3>
+                            <p>💲 $100 One-Time</p>
+                        </div>
+                        <div class="card fade-in">
+                            <h3>Maintenance Plan</h3>
+                            <p>💲 $75 / Month</p>
+                        </div>
+                    </div>
+                    <p style="text-align: center; margin-top: 20px; font-size: 1.1em; color: #555;">No contracts. No hidden fees.</p>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <div class="container">
+                <p>MAI Corp © 2026 All Rights Reserved</p>
+                <p class="footer-links">Projects: <a href="projects.html#troll-city">Troll City</a> | <a href="projects.html#udryve">UDryve</a></p>
+            </div>
+        </footer>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Replace with your actual Supabase project URL and anon key
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const projectForm = document.getElementById('project-form');
+        if (projectForm) {
+            projectForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                const name = projectForm.querySelector('[name="name"]').value;
+                const email = projectForm.querySelector('[name="email"]').value;
+                const message = projectForm.querySelector('[name="message"]').value;
+
+                try {
+                    const { data, error } = await supabaseClient
+                        .from('submissions')
+                        .insert([{ name, email, message }]);
+
+                    if (error) {
+                        console.error('Error submitting form:', error.message);
+                        alert('There was an error submitting your request. Please try again.');
+                    } else {
+                        alert('Your request has been submitted successfully! We will get back to you soon.');
+                        projectForm.reset(); // Clear the form
+                    }
+                } catch (error) {
+                    console.error('Unexpected error:', error.message);
+                    alert('An unexpected error occurred. Please try again.');
+                }
+            });
+        }
+
+        // --- Notification Badge Logic ---
+        const notificationBadge = document.querySelector('.notification-badge');
+
+        async function updateUnreadCount() {
+            if (!supabaseClient || !notificationBadge) return;
+
+            try {
+                const { count, error } = await supabaseClient
+                    .from('submissions')
+                    .select('id', { count: 'exact', head: true })
+                    .eq('is_read', false);
+
+                if (error) {
+                    console.error('Error fetching unread count:', error.message);
+                    notificationBadge.textContent = '!'; // Indicate error
+                } else {
+                    notificationBadge.textContent = count !== null ? count.toString() : '0';
+                }
+            } catch (error) {
+                console.error('Unexpected error fetching unread count:', error.message);
+                notificationBadge.textContent = '!'; // Indicate error
+            }
+        }
+
+        // Initial load
+        updateUnreadCount();
+
+        // Realtime subscription for updates
+        supabaseClient
+            .channel('public:submissions')
+            .on('postgres_changes', {
+                event: 'INSERT',
+                schema: 'public',
+                table: 'submissions',
+            }, (payload) => {
+                console.log('New submission received:', payload);
+                updateUnreadCount();
+            })
+            .on('postgres_changes', {
+                event: 'UPDATE',
+                schema: 'public',
+                table: 'submissions',
+                filter: 'is_read=eq.false' // Only listen for updates that keep it unread
+            }, (payload) => {
+                console.log('Submission updated (still unread):', payload);
+                updateUnreadCount();
+            })
+            .subscribe();
+
+        // --- Scroll Animation Logic ---
+        const fadeInElements = document.querySelectorAll('.fade-in');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        fadeInElements.forEach(el => {
+            observer.observe(el);
+        });
+
+    </script>
+</body>
+</html>

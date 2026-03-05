@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAI Corp - Affordable Technology Solutions</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Exo:wght@400;700&family=Orbitron:wght@400;700;900&display=swap');
+        :root {
+            --primary-color: #00AEEF; /* Electric Blue */
+            --secondary-color: #E5E5E5; /* Metallic Silver */
+            --dark-bg: #0A0A1A; /* Deep Space Black */
+            --dark-surface: #1C1C3A; /* Dark Navy */
+            --text-color: #E0E0E0; /* Light Gray Text */
+            --accent-color: #00AEEF; /* Electric Blue Glow */
+            --border-color: #3A3A5A; /* Mid-tone Border */
+
+            /* Typography */
+            --font-heading: 'Orbitron', sans-serif;
+            --font-body: 'Exo', sans-serif;
+
+            /* Effects */
+            --glow-shadow: 0 0 15px 5px rgba(0, 174, 239, 0.5);
+            --card-border-radius: 16px;
+            --button-border-radius: 8px;
+        }
+
+        .icon-highlight {
+            color: var(--accent-color);
+            font-weight: bold;
+            margin-right: 5px; /* Add a small space after the icon */
+        }
+        body {
+            font-family: var(--font-body);
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background: var(--dark-bg);
+            color: var(--text-color);
+            line-height: 1.7;
+            font-size: 16px;
+            overflow-x: hidden; /* Prevent horizontal scroll from animations */
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image: radial-gradient(circle at 20% 20%, rgba(0, 174, 239, 0.1), transparent 30%),
+                              radial-gradient(circle at 80% 70%, rgba(0, 174, 239, 0.1), transparent 30%);
+            animation: pulse 10s infinite alternate;
+        }
+
+        @keyframes pulse {
+            from { opacity: 0.5; }
+            to { opacity: 1; }
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        /* Wrapper for Grid Layout */
+        .wrapper {
+            display: grid;
+            grid-template-columns: 250px 1fr; /* Sidebar width and main content */
+            grid-template-rows: auto 1fr auto; /* Header, main content, footer */
+            grid-template-areas:
+                "header header"
+                "sidebar main"
+                "footer footer";
+            min-height: 100vh;
+        }
+
+        /* Main Header */
+        .main-header {
+            grid-area: header;
+            background-color: transparent; /* Make header transparent */
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 10;
+        }
+
+        .main-header .logo img {
+            height: 50px;
+            width: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .main-header .logo img:hover {
+            transform: scale(1.05);
+        }
+
+        .main-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 0 20px; /* Adjust padding for header container */
+        }
+
+        .main-header .logo {
+            font-size: 2em; /* Slightly larger logo */
+            font-weight: 700; /* Bolder logo */
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 1.5px; /* Increased letter spacing */
+        }
+
+        .main-nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .main-nav li {
+            margin-left: 30px; /* Increased spacing between nav items */
+        }
+
+        .main-nav a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+            letter-spacing: 0.5px;
+            position: relative;
+            padding-bottom: 5px;
+        }
+
+        .main-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background-color: var(--accent-color);
+            transition: width 0.3s ease;
+        }
+
+        .main-nav a:hover {
+            color: var(--accent-color);
+            text-shadow: 0 0 10px var(--accent-color);
+        }
+
+        .main-nav a:hover::after {
+            width: 100%;
+        }
+
+        .header-cta .button {
+            background: transparent;
+            color: var(--accent-color);
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: var(--button-border-radius);
+            font-weight: bold;
+            border: 1px solid var(--accent-color);
+            transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+        }
+
+        .header-cta .button:hover {
+            background-color: var(--accent-color);
+            color: var(--dark-bg);
+            box-shadow: var(--glow-shadow);
+            transform: translateY(-2px);
+        }
+
+        /* Left Sidebar */
+        .left-sidebar {
+            grid-area: sidebar;
+            background-color: rgba(28, 28, 58, 0.5);
+            padding: 20px;
+            border-right: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 2px 0 15px rgba(0,0,0,0.3);
+        }
+
+        .left-sidebar h4 {
+            color: var(--primary-color);
+            margin-top: 25px; /* Adjusted margin */
+            margin-bottom: 15px; /* Adjusted margin */
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px; /* Adjusted padding */
+            font-size: 1.1em; /* Slightly larger heading */
+            letter-spacing: 0.5px;
+        }
+
+        .left-sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 25px; /* Adjusted margin */
+        }
+
+        .left-sidebar li {
+            margin-bottom: 12px; /* Adjusted spacing */
+        }
+
+        .left-sidebar a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-size: 0.95em; /* Slightly larger link text */
+        }
+
+        .left-sidebar a:hover {
+            color: var(--accent-color);
+        }
+
+        .sidebar-contact p {
+            margin-bottom: 8px; /* Adjusted margin */
+            font-size: 0.95em; /* Slightly larger text */
+        }
+
+        .sidebar-social a {
+            margin-right: 12px; /* Adjusted spacing */
+            font-size: 1em; /* Slightly larger icons/text */
+        }
+
+        /* Main Content */
+        .main-content {
+            grid-area: main;
+            padding: 30px; /* Increased padding */
+            background-color: var(--dark-bg); /* Main content background */
+        }
+
+        section {
+            padding: 50px 0; /* Increased section padding */
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        section:last-of-type {
+            border-bottom: none;
+        }
+
+        section h1 {
+            font-size: 3.2em; /* Larger H1 */
+            font-weight: 800; /* Bolder H1 */
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        #hero p {
+            font-size: 1.2em;
+            color: var(--text-color);
+            margin-bottom: 30px;
+            text-align: center;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        section h2 {
+            font-size: 2.5em; /* Larger H2 */
+            font-weight: 700; /* Bolder H2 */
+            letter-spacing: 0.8px;
+            margin-bottom: 35px; /* Adjusted margin */
+        }
+
+        section h1, section h2, section h3 {
+            font-family: var(--font-heading);
+            text-align: center;
+            color: var(--primary-color);
+            text-shadow: 0 0 5px var(--primary-color);
+        }
+
+        .hero-buttons a {
+            display: inline-block;
+            background: transparent;
+            color: var(--accent-color);
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: var(--button-border-radius);
+            font-weight: bold;
+            border: 1px solid var(--accent-color);
+            transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+            margin: 0 10px;
+        }
+
+        .hero-buttons a:hover {
+            background-color: var(--accent-color);
+            color: var(--dark-bg);
+            box-shadow: var(--glow-shadow);
+            transform: translateY(-2px);
+        }
+
+        .hero-buttons a.call-button {
+            background-color: var(--secondary-color);
+        }
+        .hero-buttons a.call-button:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+
+        .services-grid, .pricing-grid, .projects-grid, .why-choose-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Slightly larger min-width for cards */
+            gap: 30px; /* Increased gap */
+            text-align: center;
+        }
+
+        .card {
+            background-color: rgba(28, 28, 58, 0.5); /* Semi-transparent Dark Navy */
+            padding: 30px;
+            border-radius: var(--card-border-radius);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+            border-color: var(--accent-color);
+        }
+
+        .card h3 {
+            color: var(--accent-color);
+            margin-bottom: 15px; /* Adjusted margin */
+            font-size: 1.3em; /* Larger card titles */
+            letter-spacing: 0.5px;
+        }
+        .card p {
+            color: var(--text-color);
+            font-size: 1.05em; /* Slightly larger paragraph text */
+        }
+
+        .project-card {
+            text-align: left;
+            padding: 25px;
+            border-radius: var(--card-border-radius);
+            background-color: rgba(28, 28, 58, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.5);
+            border-color: var(--accent-color);
+        }
+
+        .project-card h3 {
+            margin-top: 0;
+            color: var(--secondary-color);
+            font-size: 1.4em;
+            letter-spacing: 0.5px;
+        }
+
+        .project-card .status {
+            font-weight: bold;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+
+        .project-card .status.green-text { color: #28a745; } /* Keeping for now, but should be themed */
+        .project-card .status.yellow-text { color: #ffc107; } /* Keeping for now, but should be themed */
+
+        .cta-section {
+            background: linear-gradient(45deg, var(--dark-surface), var(--dark-bg));
+            color: white;
+            text-align: center;
+            padding: 70px 0;
+            border-bottom: none;
+            position: relative;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            box-shadow: inset 0 0 100px 20px var(--dark-bg);
+            z-index: 1;
+        }
+
+        .cta-section .container {
+            position: relative;
+            z-index: 2;
+        }
+        .cta-section h2 {
+            color: white;
+            font-size: 2.8em; /* Larger CTA heading */
+            margin-bottom: 25px; /* Adjusted margin */
+            letter-spacing: 1px;
+        }
+        .cta-section .cta-buttons a {
+            display: inline-block;
+            background: transparent;
+            color: var(--accent-color);
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: var(--button-border-radius);
+            margin: 0 15px;
+            font-weight: bold;
+            border: 1px solid var(--accent-color);
+            transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+        }
+
+        .cta-section .cta-buttons a:hover {
+            background-color: var(--accent-color);
+            color: var(--dark-bg);
+            box-shadow: var(--glow-shadow);
+            transform: translateY(-2px);
+        }
+        .cta-section .cta-buttons a.contact-button {
+            background-color: var(--secondary-color);
+        }
+        .cta-section .cta-buttons a.contact-button:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+
+        /* Form Styling */
+        .form-container {
+            background-color: rgba(28, 28, 58, 0.5);
+            padding: 40px;
+            border-radius: var(--card-border-radius);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            margin-top: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            color: var(--text-color);
+            text-align: left;
+        }
+        .form-container h3 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 25px; /* Adjusted margin */
+            font-size: 1.6em; /* Larger form title */
+            letter-spacing: 0.5px;
+        }
+        .form-container input[type="text"],
+        .form-container input[type="email"],
+        .form-container textarea {
+            width: calc(100% - 24px);
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--button-border-radius);
+            box-sizing: border-box;
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            font-family: var(--font-body);
+            font-size: 1em;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-container input[type="text"]:focus,
+        .form-container input[type="email"]:focus,
+        .form-container textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 10px 2px rgba(0, 174, 239, 0.3);
+        }
+
+        .form-container textarea {
+            resize: vertical;
+        }
+
+        .form-container button[type="submit"] {
+            background-color: var(--primary-color);
+            color: var(--dark-bg);
+            padding: 14px 25px;
+            border: none;
+            border-radius: var(--button-border-radius);
+            cursor: pointer;
+            font-size: 1.1em;
+            width: 100%;
+            font-weight: bold;
+            font-family: var(--font-heading);
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+        }
+
+        .form-container button[type="submit"]:hover {
+            background-color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: var(--glow-shadow);
+        }
+
+        /* Footer */
+        footer {
+            grid-area: footer;
+            background-color: transparent;
+            color: var(--text-color);
+            text-align: center;
+            padding: 25px 0;
+            font-size: 1em;
+            border-top: 1px solid var(--border-color);
+        }
+        footer .footer-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            margin: 0 8px; /* Increased margin */
+            transition: color 0.3s ease;
+        }
+        footer .footer-links a:hover {
+            text-decoration: underline;
+            color: var(--accent-color);
+        }
+
+        /* Responsive adjustments */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .wrapper {
+                grid-template-columns: 1fr;
+                grid-template-areas:
+                    "header"
+                    "main"
+                    "sidebar"
+                    "footer";
+            }
+
+            .main-header .container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .main-nav ul {
+                flex-direction: column;
+                margin-top: 20px;
+                align-items: center;
+            }
+
+            .main-nav li {
+                margin: 10px 0;
+            }
+
+            .header-cta {
+                margin-top: 20px;
+            }
+
+            .left-sidebar {
+                border-right: none;
+                border-top: 1px solid var(--border-color);
+            }
+
+            section h1 {
+                font-size: 2.2em;
+            }
+
+            section h2 {
+                font-size: 1.8em;
+            }
+
+            .cta-section h2 {
+                font-size: 2em;
+            }
+
+            .form-container {
+                max-width: 90%;
+            }
+        }
+
+        /* Sidebar Messages and Online Icon Styling */
+        .sidebar-messages {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .sidebar-messages h4 {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 0;
+            margin-bottom: 15px;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .notification-badge {
+            background-color: var(--accent-color);
+            color: white;
+            font-size: 0.8em;
+            font-weight: bold;
+            padding: 3px 8px;
+            border-radius: 50%;
+            min-width: 20px;
+            text-align: center;
+            display: inline-block;
+            line-height: 1;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            font-size: 0.95em;
+            color: var(--text-color);
+        }
+
+        .online-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background-color: var(--secondary-color); /* Green for online */
+            border-radius: 50%;
+            margin-right: 8px;
+            box-shadow: 0 0 5px var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+    <header class="main-header">
+        <div class="container">
+            <div class="logo">
+                <img src="assets/logo.png" alt="MAI Corp Logo" style="height: 50px;">
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="header-cta">
+                <a href="#contact" class="button">Get Started</a>
+            </div>
+        </div>
+    </header>
+
+        <aside class="left-sidebar">
+            <nav class="sidebar-nav">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#services">Our Services</a></li>
+                    <li><a href="#projects">Our Projects</a></li>
+                    <li><a href="#pricing">Pricing Plans</a></li>
+                    <li><a href="#why-choose-us">Why Choose Us</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-contact">
+                <h4>Contact Us</h4>
+                <p><span class="icon-highlight">📞</span> 720-990-6781</p>
+                <p><span class="icon-highlight">📩</span> kain.towns@maicorp.online</p>
+            </div>
+            <div class="sidebar-social">
+                <h4>Follow Us</h4>
+                <a href="#" target="_blank">Facebook</a> |
+                <a href="#" target="_blank">Twitter</a> |
+                <a href="#" target="_blank">LinkedIn</a>
+            </div>
+            <div class="sidebar-messages">
+                <h4>Messages <span class="notification-badge">0</span></h4>
+                <p class="status-indicator"><span class="online-dot"></span> MAI Corp Status: Online</p>
+            </div>
+        </aside>
+
+    <main class="main-content">
+        <section id="hero">
+            <div class="container">
+                <h1>Affordable Technology Solutions for Modern Businesses</h1>
+                <p>MAI Corp builds powerful websites, platforms, and digital tools designed to help businesses grow faster and operate smarter.</p>
+                <div class="hero-buttons">
+                    <a href="#contact"><span class="icon-highlight">🚀</span> Get Started</a>
+                    <a href="tel:720-990-6781" class="call-button"><span class="icon-highlight">📞</span> Call 720-990-6781</a>
+                </div>
+            </div>
+        </section>
+        <section id="services">
+            <div class="container">
+                <h2>What We Do</h2>
+                <div class="services-grid">
+                    <div class="card fade-in">
+                        <h3>💻 Website Development</h3>
+                        <p>Crafting responsive and engaging websites tailored to your needs.</p>
+                    </div>
+                    <div class="card fade-in">
+                        <h3>📱 Mobile Optimization</h3>
+                        <p>Ensuring your digital presence is flawless on every device.</p>
+                    </div>
+                    <div class="card fade-in">
+                        <h3>⚙️ Platform & App Development</h3>
+                        <p>Building robust platforms and applications for various industries.</p>
+                    </div>
+                    <div class="card fade-in">
+                        <h3>🔧 Monthly Maintenance & Support</h3>
+                        <p>Reliable ongoing support to keep your systems running smoothly.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="pricing">
+            <div class="container">
+                <h2>Simple Pricing That Works</h2>
+                <div class="pricing-grid">
+                    <div class="card fade-in">
+                        <h3>Website Creation</h3>
+                        <p>💲 $100 One-Time</p>
+                    </div>
+                    <div class="card fade-in">
+                        <h3>Maintenance Plan</h3>
+                        <p>💲 $75 / Month</p>
+                    </div>
+                </div>
+                <p style="text-align: center; margin-top: 20px; font-size: 1.1em; color: #555;">No contracts. No hidden fees.</p>
+            </div>
+        </section>
+
+        <section id="projects">
+            <div class="container">
+                <h2>🚀 Our Technology Ecosystem</h2>
+                <p style="text-align: center; margin-bottom: 30px; font-size: 1.1em; color: #555;">This section builds credibility and shows you’re a real tech company.</p>
+                <div class="projects-grid">
+                    <div class="project-card">
+                        <h3>Troll City</h3>
+                        <p class="status green-text">✅ Launching Now</p>
+                        <p>A next-generation live streaming and social entertainment platform with battles, gifting, and creator monetization.</p>
+                    </div>
+                    <div class="project-card">
+                        <h3>UDryve Food</h3>
+                        <p class="status yellow-text">⏳ In Development</p>
+                        <p>Food delivery platform connecting restaurants and customers with fast, reliable ordering.</p>
+                    </div>
+                    <div class="project-card">
+                        <h3>UDryve Auto</h3>
+                        <p class="status yellow-text">⏳ In Development</p>
+                        <p>Automotive service marketplace for repairs, maintenance, and vehicle services.</p>
+                    </div>
+                    <div class="project-card">
+                        <h3>UDryve Health</h3>
+                        <p class="status yellow-text">⏳ In Development</p>
+                        <p>Healthcare access platform focused on convenience, scheduling, and digital health services.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="why-choose-us">
+            <div class="container">
+                <h2>Why Choose MAI Corp</h2>
+                <div class="why-choose-grid">
+                    <div class="card fade-in">
+                        <p>✔ Affordable pricing</p>
+                    </div>
+                    <div class="card fade-in">
+                        <p>✔ Innovative platforms</p>
+                    </div>
+                    <div class="card">
+                        <p>✔ Real startup experience</p>
+                    </div>
+                    <div class="card">
+                        <p>✔ Ongoing support</p>
+                    </div>
+                    <div class="card">
+                        <p>✔ Local & reliable</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about">
+            <div class="container">
+                <h2>About MAI Corp</h2>
+                <p style="text-align: center; font-size: 1.1em; line-height: 1.6;">MAI Corp is a technology company focused on building digital platforms, business tools, and innovative solutions across multiple industries including media, transportation, food delivery, and healthcare. Our mission is to make advanced technology accessible to everyone.</p>
+            </div>
+        </section>
+
+        <section id="contact" class="cta-section">
+            <div class="container">
+                <h2>Ready to build your website or platform?</h2>
+                <div class="cta-buttons">
+                    <a href="tel:720-990-6781"><span class="icon-highlight">📞</span> 720-990-6781</a>
+                    <a href="mailto:kain.towns@maicorp.online" class="contact-button"><span class="icon-highlight">📩</span> Contact MAI Corp Today</a>
+                    <div class="form-container">
+                        <form action="#" method="POST" id="project-form">
+                            <h3>Contact Us</h3>
+                            <input type="text" name="name" placeholder="Your Name" required>
+                            <input type="email" name="email" placeholder="Your Email" required>
+                            <textarea name="message" placeholder="Tell us about your project" rows="5" required></textarea>
+                            <button type="submit">Submit Project Request</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>MAI Corp © 2026 All Rights Reserved</p>
+            <p class="footer-links">Projects: <a href="#troll-city">Troll City</a> | <a href="#udryve">UDryve</a></p>
+        </div>
+    </footer>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Replace with your actual Supabase project URL and anon key
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const projectForm = document.getElementById('project-form');
+        if (projectForm) {
+            projectForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                const name = projectForm.querySelector('[name="name"]').value;
+                const email = projectForm.querySelector('[name="email"]').value;
+                const message = projectForm.querySelector('[name="message"]').value;
+
+                try {
+                    const { data, error } = await supabaseClient
+                        .from('submissions')
+                        .insert([{ name, email, message }]);
+
+                    if (error) {
+                        console.error('Error submitting form:', error.message);
+                        alert('There was an error submitting your request. Please try again.');
+                    } else {
+                        alert('Your request has been submitted successfully! We will get back to you soon.');
+                        projectForm.reset(); // Clear the form
+                    }
+                } catch (error) {
+                    console.error('Unexpected error:', error.message);
+                    alert('An unexpected error occurred. Please try again.');
+                }
+            });
+        }
+
+        // --- Notification Badge Logic ---
+        const notificationBadge = document.querySelector('.notification-badge');
+
+        async function updateUnreadCount() {
+            if (!supabaseClient || !notificationBadge) return;
+
+            try {
+                const { count, error } = await supabaseClient
+                    .from('submissions')
+                    .select('id', { count: 'exact', head: true })
+                    .eq('is_read', false);
+
+                if (error) {
+                    console.error('Error fetching unread count:', error.message);
+                    notificationBadge.textContent = '!'; // Indicate error
+                } else {
+                    notificationBadge.textContent = count !== null ? count.toString() : '0';
+                }
+            } catch (error) {
+                console.error('Unexpected error fetching unread count:', error.message);
+                notificationBadge.textContent = '!'; // Indicate error
+            }
+        }
+
+        // Initial load
+        updateUnreadCount();
+
+        // Realtime subscription for updates
+        supabaseClient
+            .channel('public:submissions')
+            .on('postgres_changes', {
+                event: 'INSERT',
+                schema: 'public',
+                table: 'submissions',
+            }, (payload) => {
+                console.log('New submission received:', payload);
+                updateUnreadCount();
+            })
+            .on('postgres_changes', {
+                event: 'UPDATE',
+                schema: 'public',
+                table: 'submissions',
+                filter: 'is_read=eq.false' // Only listen for updates that keep it unread
+            }, (payload) => {
+                console.log('Submission updated (still unread):', payload);
+                updateUnreadCount();
+            })
+            .subscribe();
+
+        // --- Scroll Animation Logic ---
+        const fadeInElements = document.querySelectorAll('.fade-in');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        fadeInElements.forEach(el => {
+            observer.observe(el);
+        });
+
+    </script>
+</body>
+</html>
