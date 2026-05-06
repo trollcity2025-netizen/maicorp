@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CEO Dashboard - MaiCorp">
+    <title>CEO Dashboard — MaiCorp</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .dashboard {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top right, rgba(37,99,235,.16), transparent 28%),
+                radial-gradient(circle at bottom left, rgba(124,58,237,.14), transparent 26%),
+                linear-gradient(180deg, #020711 0%, #030914 100%);
+            color: white;
+            position: relative;
+        }
+        .dashboard::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(59,130,246,.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59,130,246,.05) 1px, transparent 1px);
+            background-size: 70px 70px;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .dashboard-header {
+            background: rgba(3,8,18,.82);
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(255,255,255,.08);
+            padding: 0 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .dashboard-header-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+        }
+        .dashboard-logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo-cube {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(59,130,246,.4); }
+            50% { box-shadow: 0 0 0 8px rgba(59,130,246,0); }
+        }
+        .dashboard-nav {
+            display: flex;
+            gap: 4px;
+        }
+        .dashboard-nav button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            background: transparent;
+            color: rgba(255,255,255,.7);
+            position: relative;
+        }
+        .dashboard-nav button.active {
+            background: rgba(59,130,246,.15);
+            color: #60a5fa;
+            box-shadow: 0 0 20px rgba(59,130,246,.3);
+        }
+        .dashboard-nav button.active::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            background: #60a5fa;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(59,130,246,.8);
+        }
+        .dashboard-nav button:not(.active):hover {
+            background: rgba(255,255,255,.05);
+            color: white;
+        }
+        .dashboard-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .dashboard-user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(59,130,246,.4);
+        }
+        .dashboard-user-info {
+            text-align: right;
+        }
+        .dashboard-user-name {
+            font-weight: 600;
+            color: white;
+        }
+        .dashboard-user-role {
+            font-size: 12px;
+            color: rgba(255,255,255,.5);
+            text-transform: uppercase;
+        }
+        .dashboard-logout {
+            padding: 8px 16px;
+            background: rgba(239,68,68,.15);
+            color: #fca5a5;
+            border: 1px solid rgba(239,68,68,.3);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-left: 10px;
+            transition: all 0.3s;
+        }
+        .dashboard-logout:hover {
+            background: rgba(239,68,68,.25);
+            color: white;
+        }
+
+        .dashboard-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .dashboard-section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .dashboard-section.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: rgba(15,23,42,.72);
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid rgba(148,163,184,.14);
+            backdrop-filter: blur(18px);
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+        .stat-card h3 {
+            color: rgba(255,255,255,.6);
+            font-size: 14px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .stat-card .value {
+            font-size: 36px;
+            font-weight: bold;
+            color: white;
+            letter-spacing: -1px;
+        }
+        .stat-card .trend {
+            font-size: 14px;
+            color: #4ade80;
+            margin-top: 4px;
+        }
+        .stat-card.glow {
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        @keyframes glow {
+            from { box-shadow: 0 0 10px rgba(59,130,246,.2); }
+            to { box-shadow: 0 0 30px rgba(59,130,246,.4); }
+        }
+
+        .submissions-table-container {
+            background: rgba(15,23,42,.72);
+            border-radius: 12px;
+            border: 1px solid rgba(148,163,184,.14);
+            backdrop-filter: blur(18px);
+            overflow: hidden;
+        }
+        .submissions-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(148,163,184,.14);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .submissions-header h2 {
+            color: white;
+            font-size: 20px;
+        }
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+        }
+        .filter-tab {
+            padding: 8px 16px;
+            border: 2px solid rgba(148,163,184,.2);
+            background: rgba(255,255,255,.03);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            color: rgba(255,255,255,.7);
+        }
+        .filter-tab.active {
+            border-color: #3b82f6;
+            background: rgba(59,130,246,.15);
+            color: #60a5fa;
+            box-shadow: 0 0 15px rgba(59,130,246,.2);
+        }
+        .filter-tab:hover:not(.active) {
+            border-color: rgba(148,163,184,.4);
+            color: white;
+        }
+        .submissions-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .submissions-table th {
+            text-align: left;
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(148,163,184,.14);
+            color: rgba(255,255,255,.5);
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+        .submissions-table td {
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(148,163,184,.08);
+            color: rgba(255,255,255,.8);
+        }
+        .submissions-table tr:hover td {
+            background: rgba(255,255,255,.03);
+        }
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-badge.new { background: rgba(59,130,246,.2); color: #60a5fa; }
+        .status-badge.contacted { background: rgba(74,222,128,.2); color: #4ade80; }
+        .status-badge.pending { background: rgba(251,191,36,.2); color: #fbbf24; }
+        .status-badge.closed { background: rgba(148,163,184,.2); color: #94a3b8; }
+        .user-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+        }
+        .user-badge.ceo {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+        }
+        .message-preview {
+            max-width: 300px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: rgba(255,255,255,.6);
+        }
+
+        .chat-container {
+            background: rgba(15,23,42,.72);
+            border-radius: 12px;
+            border: 1px solid rgba(148,163,184,.14);
+            backdrop-filter: blur(18px);
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(148,163,184,.14);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chat-header h2 {
+            color: white;
+            font-size: 20px;
+        }
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: rgba(2,7,17,.3);
+        }
+        .chat-message {
+            margin-bottom: 16px;
+            display: flex;
+        }
+        .chat-message.sent {
+            justify-content: flex-end;
+        }
+        .chat-message.received {
+            justify-content: flex-start;
+        }
+        .chat-message-bubble {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            line-height: 1.5;
+        }
+        .chat-message.sent .chat-message-bubble {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+        .chat-message.received .chat-message-bubble {
+            background: rgba(30,41,59,.8);
+            color: rgba(255,255,255,.9);
+            border-bottom-left-radius: 4px;
+            border: 1px solid rgba(148,163,184,.1);
+        }
+        .chat-message-time {
+            font-size: 11px;
+            color: rgba(255,255,255,.4);
+            margin-top: 4px;
+        }
+        .chat-input-container {
+            padding: 20px;
+            border-top: 1px solid rgba(148,163,184,.14);
+            display: flex;
+            gap: 10px;
+        }
+        .chat-input-container input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid rgba(148,163,184,.2);
+            border-radius: 8px;
+            font-size: 14px;
+            background: rgba(255,255,255,.05);
+            color: white;
+        }
+        .chat-input-container input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 10px rgba(59,130,246,.3);
+        }
+        .chat-input-container button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .chat-input-container button:hover {
+            box-shadow: 0 0 20px rgba(59,130,246,.4);
+        }
+
+        .order-details-card {
+            background: rgba(15,23,42,.72);
+            border-radius: 12px;
+            border: 1px solid rgba(148,163,184,.14);
+            backdrop-filter: blur(18px);
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        .order-details-card h3 {
+            color: white;
+            font-size: 18px;
+            margin-bottom: 16px;
+        }
+        .order-detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(148,163,184,.08);
+        }
+        .order-detail-row:last-child {
+            border-bottom: none;
+        }
+        .order-detail-label {
+            color: rgba(255,255,255,.5);
+        }
+        .order-detail-value {
+            color: rgba(255,255,255,.9);
+            font-weight: 500;
+        }
+        .order-detail-value.highlight {
+            color: #60a5fa;
+            font-size: 20px;
+        }
+        .page-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .page-selector button {
+            padding: 10px 20px;
+            border: 2px solid rgba(148,163,184,.2);
+            background: rgba(255,255,255,.03);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            color: rgba(255,255,255,.7);
+        }
+        .page-selector button.active {
+            border-color: #3b82f6;
+            background: rgba(59,130,246,.15);
+            color: #60a5fa;
+            box-shadow: 0 0 15px rgba(59,130,246,.2);
+        }
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: rgba(255,255,255,.4);
+        }
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+        .order-details-card h3 {
+            color: #1a1a2e;
+            font-size: 18px;
+            margin-bottom: 16px;
+        }
+        .order-detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .order-detail-row:last-child {
+            border-bottom: none;
+        }
+        .order-detail-label {
+            color: #999;
+        }
+        .order-detail-value {
+            color: #333;
+            font-weight: 600;
+        }
+        .order-detail-value.highlight {
+            color: #1a1a2e;
+            font-size: 20px;
+        }
+
+        .page-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .page-selector button {
+            padding: 10px 20px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .page-selector button.active {
+            border-color: #1a1a2e;
+            background: #1a1a2e;
+            color: white;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="dashboard-header-inner">
+                <div class="dashboard-logo">
+                    <span class="logo-cube">◈</span>
+                    MAI CORP COMMAND CENTER
+                </div>
+                <nav class="dashboard-nav">
+                    <button class="active" onclick="switchSection('overview')">◈ Overview</button>
+                    <button onclick="switchSection('submissions')">▣ Submissions</button>
+                    <button onclick="switchSection('orders')">⌁ Orders</button>
+                    <button onclick="switchSection('handoffs')">⬡ Handoffs</button>
+                    <button onclick="switchSection('clients')">◉ Clients</button>
+                </nav>
+                <div class="dashboard-user">
+                    <div class="dashboard-user-info">
+                        <div class="dashboard-user-name" id="dashboardUserName">CEO</div>
+                        <div class="dashboard-user-role">Chief Executive Officer</div>
+                    </div>
+                    <div class="dashboard-user-avatar">C</div>
+                    <button class="dashboard-logout" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <main class="dashboard-content">
+            <!-- Overview Section -->
+            <section class="dashboard-section active" id="section-overview">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>TOTAL PLATFORM REVENUE</h3>
+                        <div class="value" id="statRevenue">$0</div>
+                        <div class="trend">+0% all time</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>ACTIVE SYSTEMS</h3>
+                        <div class="value" id="statActiveOrders">0</div>
+                        <div class="trend">operational</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>ONLINE USERS</h3>
+                        <div class="value" id="statTotalClients">0</div>
+                        <div class="trend">clients active</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>INFRASTRUCTURE UPTIME</h3>
+                        <div class="value" id="statUptime">100%</div>
+                        <div class="trend">+99.9% SLA</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Submissions Section -->
+            <section class="dashboard-section" id="section-submissions">
+                <div class="submissions-table-container">
+                    <div class="submissions-header">
+                        <h2>Contact Form Submissions</h2>
+                        <div class="filter-tabs">
+                            <button class="filter-tab active" onclick="filterSubmissions('all')">All</button>
+                            <button class="filter-tab" onclick="filterSubmissions('new')">New</button>
+                            <button class="filter-tab" onclick="filterSubmissions('contacted')">Contacted</button>
+                        </div>
+                    </div>
+                    <table class="submissions-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Message</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="submissionsTableBody">
+                            <tr><td colspan="6"><div class="no-data">No submissions yet</div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Orders Section -->
+            <section class="dashboard-section" id="section-orders">
+                <div id="ordersContainer">
+                    <div class="no-data">No orders yet</div>
+                </div>
+            </section>
+
+            <!-- Platform Handoffs Section -->
+            <section class="dashboard-section" id="section-handoffs">
+                <div style="margin-bottom:20px;">
+                    <button onclick="openHandoffForm()" style="padding:12px 24px;background:linear-gradient(135deg,#3b82f6,#2563eb);color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;">+ New Platform Handoff</button>
+                </div>
+                <div class="handoffs-container" id="handoffsContainer">
+                    <div class="no-data">No handoffs yet</div>
+                </div>
+            </section>
+
+            <!-- Handoff Form Modal -->
+            <div id="handoffModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);backdrop-filter:blur(10px);z-index:1000;overflow-y:auto;">
+                <div style="max-width:900px;margin:40px auto;padding:30px;background:rgba(15,23,42,.95);border:1px solid rgba(148,163,184,.2);border-radius:16px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+                        <h2 style="margin:0;color:white;">Platform Handoff Form</h2>
+                        <button onclick="closeHandoffForm()" style="background:none;border:none;color:white;font-size:24px;cursor:pointer;">&times;</button>
+                    </div>
+                    <form id="handoffForm" onsubmit="saveHandoff(event)">
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+                            <div class="field"><label>Client ID</label><input type="text" id="handoff_client_id" required></div>
+                            <div class="field"><label>Order ID</label><input type="text" id="handoff_order_id"></div>
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+                            <div class="field"><label>Business Name *</label><input type="text" id="handoff_business_name" required></div>
+                            <div class="field"><label>Platform Name *</label><input type="text" id="handoff_platform_name" required></div>
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+                            <div class="field"><label>Package Type</label><select id="handoff_package_type"><option>Managed</option><option>Self-Managed</option><option>Hybrid</option></select></div>
+                            <div class="field"><label>Handoff Status</label><select id="handoff_status"><option value="draft">Draft</option><option value="ready">Ready</option><option value="sent">Sent</option></select></div>
+                        </div>
+                        <hr style="border:none;border-top:1px solid rgba(148,163,184,.1);margin:20px 0;">
+                        <h3 style="color:#60a5fa;margin-bottom:12px;">Platform Access</h3>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+                            <div class="field"><label>Platform URL</label><input type="url" id="handoff_platform_url"></div>
+                            <div class="field"><label>Admin Login URL</label><input type="url" id="handoff_admin_login_url"></div>
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+                            <div class="field"><label>Client Admin Email</label><input type="email" id="handoff_client_admin_email"></div>
+                            <div class="field"><label>Temp Password/Reset Note</label><input type="text" id="handoff_temp_password" placeholder="Reset link sent to email"></div>
+                        </div>
+                        <hr style="border:none;border-top:1px solid rgba(148,163,184,.1);margin:20px 0;">
+                        <h3 style="color:#60a5fa;margin-bottom:12px;">Domain Provider</h3>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+                            <div class="field"><label>Provider</label><input type="text" id="handoff_domain_provider" value="IONOS"></div>
+                            <div class="field"><label>Login URL</label><input type="url" id="handoff_domain_login_url"></div>
+                        </div>
+                        <div class="field" style="margin-bottom:20px;"><label>Domain Notes</label><textarea id="handoff_domain_notes" rows="2"></textarea></div>
+                        <hr style="border:none;border-top:1px solid rgba(148,163,184,.1);margin:20px 0;">
+                        <h3 style="color:#60a5fa;margin-bottom:12px;">Infrastructure</h3>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+                            <div class="field"><label>Frontend Provider</label><input type="text" id="handoff_frontend_provider" placeholder="Vercel/Render"></div>
+                            <div class="field"><label>Frontend Project URL</label><input type="url" id="handoff_frontend_project_url"></div>
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+                            <div class="field"><label>Backend Provider</label><input type="text" id="handoff_backend_provider" value="Supabase"></div>
+                            <div class="field"><label>Backend Project URL</label><input type="url" id="handoff_backend_project_url"></div>
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+                            <div class="field"><label>Database Provider</label><input type="text" id="handoff_database_provider" value="Supabase"></div>
+                            <div class="field"><label>Database Project URL</label><input type="url" id="handoff_database_project_url"></div>
+                        </div>
+                        <hr style="border:none;border-top:1px solid rgba(148,163,184,.1);margin:20px 0;">
+                        <h3 style="color:#60a5fa;margin-bottom:12px;">Payment & Support</h3>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+                            <div class="field"><label>PayPal Account Email</label><input type="email" id="handoff_paypal_email"></div>
+                            <div class="field"><label>PayPal Setup Status</label><select id="handoff_paypal_status"><option>Not Started</option><option>Pending</option><option>Complete</option></select></div>
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+                            <div class="field"><label>Hosting Status</label><select id="handoff_hosting_status"><option>Active</option><option>Pending</option><option>Maintenance</option></select></div>
+                            <div class="field"><label>Maintenance Plan</label><select id="handoff_maintenance_plan"><option>Standard</option><option>Premium</option><option>Self-Managed</option></select></div>
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+                            <div class="field"><label>Monthly Support Fee ($)</label><input type="number" id="handoff_monthly_fee" step="0.01"></div>
+                            <div class="field"><label>Support Contact Email</label><input type="email" id="handoff_support_email"></div>
+                        </div>
+                        <div class="field" style="margin-bottom:20px;"><label>Support Phone</label><input type="text" id="handoff_support_phone"></div>
+                        <hr style="border:none;border-top:1px solid rgba(148,163,184,.1);margin:20px 0;">
+                        <h3 style="color:#60a5fa;margin-bottom:12px;">Timeline & Features</h3>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+                            <div class="field"><label>Launch Date</label><input type="date" id="handoff_launch_date"></div>
+                            <div class="field"><label>Renewal Date</label><input type="date" id="handoff_renewal_date"></div>
+                        </div>
+                        <div class="field" style="margin-bottom:20px;"><label>Included Features (comma-separated)</label><input type="text" id="handoff_features" placeholder="Booking, Payments, Admin Dashboard, etc"></div>
+                        <hr style="border:none;border-top:1px solid rgba(148,163,184,.1);margin:20px 0;">
+                        <h3 style="color:#60a5fa;margin-bottom:12px;">Client Information</h3>
+                        <div class="field" style="margin-bottom:16px;"><label>Client Next Steps</label><textarea id="handoff_next_steps" rows="3"></textarea></div>
+                        <div class="field" style="margin-bottom:16px;"><label>Known Limitations</label><textarea id="handoff_limitations" rows="2"></textarea></div>
+                        <hr style="border:none;border-top:1px solid rgba(148,163,184,.1);margin:20px 0;">
+                        <h3 style="color:#60a5fa;margin-bottom:12px;">Internal Notes (Admin Only - Not Shared)</h3>
+                        <div class="field" style="margin-bottom:16px;"><label>Admin Private Notes</label><textarea id="handoff_private_notes" rows="3" style="background:rgba(2,6,23,.62);"></textarea></div>
+                        <div style="margin-top:24px;display:flex;gap:12px;justify-content:flex-end;">
+                            <button type="button" onclick="closeHandoffForm()" style="padding:10px 20px;background:transparent;border:1px solid rgba(255,255,255,.2);color:white;border-radius:8px;cursor:pointer;">Cancel</button>
+                            <button type="submit" style="padding:10px 24px;background:linear-gradient(135deg,#3b82f6,#2563eb);color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Save Handoff</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Clients Section (Chat) -->
+            <section class="dashboard-section" id="section-clients">
+                <div class="clients-grid" id="clientsGrid">
+                    <div class="no-data">No clients yet</div>
+                </div>
+                <div class="chat-container" id="chatContainer" style="display:none;">
+                    <div class="chat-header">
+                        <h2 id="chatClientName">Chat with Client</h2>
+                        <button onclick="closeChat()" class="btn btn--secondary btn-small">Close Chat</button>
+                    </div>
+                    <div class="chat-messages" id="chatMessages"></div>
+                    <div class="chat-input-container">
+                        <input type="text" id="chatInput" placeholder="Type your message..." onkeypress="handleChatKeypress(event)">
+                        <button onclick="sendChatMessage()">Send</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        let currentUser = null;
+
+        // Check auth
+        function checkAuth() {
+            const user = localStorage.getItem('maicorp_user');
+            if (!user) {
+                window.location.href = 'auth.html';
+                return;
+            }
+            currentUser = JSON.parse(user);
+            if (currentUser.role !== 'ceo') {
+                window.location.href = 'dashboard.html';
+                return;
+            }
+            document.getElementById('dashboardUserName').textContent = currentUser.name || 'CEO';
+            loadDashboardData();
+        }
+
+        function logout() {
+            localStorage.removeItem('maicorp_user');
+            window.location.href = 'auth.html';
+        }
+
+        // Switch sections
+        function switchSection(section) {
+            document.querySelectorAll('.dashboard-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.dashboard-nav button').forEach(btn => btn.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById('section-' + section).classList.add('active');
+        }
+
+        // Load all dashboard data
+        function loadDashboardData() {
+            loadStats();
+            loadSubmissions();
+            loadOrders();
+            loadClients();
+        }
+
+        // Load stats
+        function loadStats() {
+            const orders = getOrders();
+            const users = getAllUsers();
+            
+            document.getElementById('statActiveOrders').textContent = orders.filter(o => o.status === 'active' || o.status === 'pending').length;
+            document.getElementById('statTotalClients').textContent = users.filter(u => u.role === 'client').length;
+            
+            const revenue = orders.reduce((sum, o) => sum + (o.price || 0), 0);
+            document.getElementById('statRevenue').textContent = '$' + revenue.toLocaleString();
+            
+            document.getElementById('statUptime').textContent = '100%';
+        }
+
+        // Get submissions
+        function getSubmissions() {
+            const subs = localStorage.getItem('maicorp_submissions');
+            return subs ? JSON.parse(subs) : [];
+        }
+
+        // Get orders
+        function getOrders() {
+            const orders = localStorage.getItem('maicorp_orders');
+            return orders ? JSON.parse(orders) : [];
+        }
+
+        // Get all users
+        function getAllUsers() {
+            const users = localStorage.getItem('maicorp_users');
+            return users ? JSON.parse(users) : [];
+        }
+
+        // Load submissions
+        function loadSubmissions() {
+            const submissions = getSubmissions();
+            const tbody = document.getElementById('submissionsTableBody');
+            
+            if (submissions.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6"><div class="no-data">No submissions yet</div></td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = submissions.map(sub => `
+                <tr>
+                    <td>${formatDate(sub.createdAt)}</td>
+                    <td>${escapeHtml(sub.name)}</td>
+                    <td>${escapeHtml(sub.email)}</td>
+                    <td><span class="status-badge ${sub.status || 'new'}">${(sub.status || 'new').toUpperCase()}</span></td>
+                    <td class="message-preview">${escapeHtml(sub.message)}</td>
+                    <td>
+                        <button class="btn-small" style="padding:6px 12px;background:rgba(59,130,246,.2);color:#60a5fa;border:1px solid rgba(59,130,246,.3);border-radius:4px;cursor:pointer;" 
+                            onclick="updateSubmissionStatus('${sub.id}','contacted')">Mark Contacted</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function filterSubmissions(filter) {
+            const submissions = getSubmissions();
+            const tbody = document.getElementById('submissionsTableBody');
+            let filtered = submissions;
+            
+            if (filter !== 'all') {
+                filtered = submissions.filter(s => (s.status || 'new') === filter);
+            }
+            
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6"><div class="no-data">No submissions found</div></td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = filtered.map(sub => `
+                <tr>
+                    <td>${formatDate(sub.createdAt)}</td>
+                    <td>${escapeHtml(sub.name)}</td>
+                    <td>${escapeHtml(sub.email)}</td>
+                    <td><span class="status-badge ${sub.status || 'new'}">${(sub.status || 'new').toUpperCase()}</span></td>
+                    <td class="message-preview">${escapeHtml(sub.message)}</td>
+                    <td>
+                        <button class="btn-small" style="padding:6px 12px;background:rgba(59,130,246,.2);color:#60a5fa;border:1px solid rgba(59,130,246,.3);border-radius:4px;cursor:pointer;" 
+                            onclick="updateSubmissionStatus('${sub.id}','contacted')">Mark Contacted</button>
+                    </td>
+                </tr>
+            `).join('');
+            
+            // Update filter tabs
+            document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function updateSubmissionStatus(id, status) {
+            const submissions = getSubmissions();
+            const sub = submissions.find(s => s.id === id);
+            if (sub) {
+                sub.status = status;
+                localStorage.setItem('maicorp_submissions', JSON.stringify(submissions));
+                loadSubmissions();
+            }
+        }
+
+        // Load orders
+        function loadOrders() {
+            const orders = getOrders();
+            const container = document.getElementById('ordersContainer');
+            
+            if (orders.length === 0) {
+                container.innerHTML = '<div class="no-data">No orders yet</div>';
+                return;
+            }
+
+            container.innerHTML = orders.map(order => {
+                const phaseMap = {
+                    'pending': 'IN DEVELOPMENT',
+                    'processing': 'PROCESSING',
+                    'pending_payment': 'PAYMENT PENDING',
+                    'active': 'LIVE',
+                    'completed': 'DEPLOYED',
+                    'contacted': 'CLIENT REVIEW'
+                };
+                const phase = phaseMap[order.status] || 'PENDING';
+
+                // Handle both old and new order formats
+                const clientName = order.businessName || order.name || 'Unknown Client';
+                const clientEmail = order.contactEmail || order.email || 'No Email';
+                const packageType = order.package || order.websiteType || 'Unknown Package';
+                const setupFee = order.setup || '$0';
+                const monthlyFee = order.monthly || '$0';
+
+                return `
+                <div class="order-details-card">
+                    <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px;">
+                        <h3 style="margin:0;">Order #${order.id} - ${escapeHtml(clientName)}</h3>
+                        <span style="padding:4px 12px;background:rgba(59,130,246,.2);color:#60a5fa;border-radius:20px;font-size:11px;font-weight:600;border:1px solid rgba(59,130,246,.3);">${phase}</span>
+                    </div>
+                    <div class="order-detail-row">
+                        <span class="order-detail-label">Client Email</span>
+                        <span class="order-detail-value">${escapeHtml(clientEmail)}</span>
+                    </div>
+                    <div class="order-detail-row">
+                        <span class="order-detail-label">Package</span>
+                        <span class="order-detail-value">${escapeHtml(packageType)}</span>
+                    </div>
+                    <div class="order-detail-row">
+                        <span class="order-detail-label">Setup Fee</span>
+                        <span class="order-detail-value">${setupFee}</span>
+                    </div>
+                    <div class="order-detail-row">
+                        <span class="order-detail-label">Monthly Fee</span>
+                        <span class="order-detail-value">${monthlyFee}</span>
+                    </div>
+                    ${order.paypalOrderId ? `
+                    <div class="order-detail-row">
+                        <span class="order-detail-label">PayPal Order ID</span>
+                        <span class="order-detail-value">${order.paypalOrderId}</span>
+                    </div>
+                    ` : ''}
+                    <div class="order-detail-row">
+                        <span class="order-detail-label">Date</span>
+                        <span class="order-detail-value">${formatDate(order.createdAt)}</span>
+                    </div>
+                    <div style="margin-top:16px;display:flex;gap:10px;">
+                        <button class="btn btn--secondary btn-small" onclick="chatWithClient('${clientEmail}','${escapeHtml(clientName)}')">Chat with Client</button>
+                        <button class="btn btn-small" style="background:rgba(59,130,246,.2);color:#60a5fa;border:1px solid rgba(59,130,246,.3);" onclick="updateOrderStatus('${order.id}','${(order.status === 'active' ? 'completed' : order.status === 'processing' ? 'active' : 'processing')}')">
+                            Mark as ${order.status === 'active' ? 'Completed' : order.status === 'processing' ? 'Active' : 'Processing'}
+                        </button>
+                    </div>
+                </div>
+            `}).join('');
+        }
+
+        // Load clients for chat
+        function loadClients() {
+            const users = getAllUsers();
+            const clients = users.filter(u => u.role === 'client');
+            const grid = document.getElementById('clientsGrid');
+            
+            if (clients.length === 0) {
+                grid.innerHTML = '<div class="no-data">No clients yet</div>';
+                return;
+            }
+
+            grid.innerHTML = clients.map(client => `
+                <div style="background:rgba(15,23,42,.72);padding:20px;border-radius:12px;border:1px solid rgba(148,163,184,.14);backdrop-filter:blur(18px);cursor:pointer;transition:all 0.3s;" 
+                     onclick="chatWithClient('${client.email}','${escapeHtml(client.name)}')"
+                     onmouseover="this.style.transform='translateY(-5px)';this.style.boxShadow='0 0 30px rgba(59,130,246,.2)'"
+                     onmouseout="this.style.transform='';this.style.boxShadow='0 0 0px rgba(0,0,0,0)'">
+                    <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px;">
+                        <div style="width:50px;height:50px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:20px;position:relative;">
+                            ${escapeHtml(client.name[0])}
+                            <span style="position:absolute;bottom:0;right:0;width:10px;height:10px;background:#4ade80;border-radius:50%;border:2px solid rgba(15,23,42,.72);"></span>
+                        </div>
+                        <div>
+                            <h3 style="margin:0;color:white;">${escapeHtml(client.name)}</h3>
+                            <p style="margin:0;color:rgba(255,255,255,.6);font-size:14px;">${escapeHtml(client.email)}</p>
+                        </div>
+                    </div>
+                    <p style="margin:0;color:rgba(255,255,255,.4);">${escapeHtml(client.company || 'No company specified')}</p>
+                </div>
+            `).join('');
+        }
+
+        // Chat functionality
+        let currentChatClient = null;
+
+        function chatWithClient(email, name) {
+            currentChatClient = { email, name };
+            document.getElementById('chatClientName').textContent = `Chat with ${name}`;
+            document.getElementById('chatContainer').style.display = 'flex';
+            document.getElementById('section-clients').style.display = 'none';
+            loadChatMessages();
+        }
+
+        function closeChat() {
+            document.getElementById('chatContainer').style.display = 'none';
+            document.getElementById('section-clients').style.display = 'block';
+            currentChatClient = null;
+        }
+
+        function getChats() {
+            const chats = localStorage.getItem('maicorp_chats');
+            return chats ? JSON.parse(chats) : [];
+        }
+
+        function saveChat(message) {
+            const chats = getChats();
+            chats.push(message);
+            localStorage.setItem('maicorp_chats', JSON.stringify(chats));
+        }
+
+        function loadChatMessages() {
+            const chats = getChats();
+            const container = document.getElementById('chatMessages');
+            
+            if (!currentChatClient) return;
+            
+            const clientChats = chats.filter(c => 
+                (c.from === currentUser.email && c.to === currentChatClient.email) ||
+                (c.from === currentChatClient.email && c.to === currentUser.email)
+            );
+
+            if (clientChats.length === 0) {
+                container.innerHTML = '<div class="no-data" style="padding:40px;">No messages yet. Start the conversation!</div>';
+                return;
+            }
+
+            container.innerHTML = clientChats.map(chat => `
+                <div class="chat-message ${chat.from === currentUser.email ? 'sent' : 'received'}">
+                    <div class="chat-message-bubble">${escapeHtml(chat.message)}</div>
+                    <div class="chat-message-time">${formatDate(chat.createdAt, 'time')}</div>
+                </div>
+            `).join('');
+            
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message || !currentChatClient) return;
+
+            const chat = {
+                id: Date.now().toString(),
+                from: currentUser.email,
+                to: currentChatClient.email,
+                message: message,
+                createdAt: new Date().toISOString()
+            };
+
+            saveChat(chat);
+            input.value = '';
+            loadChatMessages();
+        }
+
+        function handleChatKeypress(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendChatMessage();
+            }
+        }
+
+        // Update order status
+        function updateOrderStatus(id, status) {
+            const orders = getOrders();
+            const order = orders.find(o => o.id === id);
+            if (order) {
+                order.status = status;
+                localStorage.setItem('maicorp_orders', JSON.stringify(orders));
+                loadOrders();
+            }
+        }
+
+        // Handoff Management
+        function openHandoffForm(handoffId = null) {
+            document.getElementById('handoffModal').style.display = 'block';
+            if (handoffId) {
+                const handoffs = getHandoffs();
+                const handoff = handoffs.find(h => h.id === handoffId);
+                if (handoff) {
+                    document.getElementById('handoff_client_id').value = handoff.client_id || '';
+                    document.getElementById('handoff_order_id').value = handoff.order_id || '';
+                    document.getElementById('handoff_business_name').value = handoff.business_name || '';
+                    document.getElementById('handoff_platform_name').value = handoff.platform_name || '';
+                    document.getElementById('handoff_package_type').value = handoff.package_type || 'Managed';
+                    document.getElementById('handoff_status').value = handoff.handoff_status || 'draft';
+                    document.getElementById('handoff_platform_url').value = handoff.platform_url || '';
+                    document.getElementById('handoff_admin_login_url').value = handoff.admin_login_url || '';
+                    document.getElementById('handoff_client_admin_email').value = handoff.client_admin_email || '';
+                    document.getElementById('handoff_temp_password').value = handoff.temporary_password_or_reset_note || '';
+                    document.getElementById('handoff_domain_provider').value = handoff.domain_provider || 'IONOS';
+                    document.getElementById('handoff_domain_login_url').value = handoff.domain_login_url || '';
+                    document.getElementById('handoff_domain_notes').value = handoff.domain_notes || '';
+                    document.getElementById('handoff_frontend_provider').value = handoff.frontend_provider || '';
+                    document.getElementById('handoff_frontend_project_url').value = handoff.frontend_project_url || '';
+                    document.getElementById('handoff_backend_provider').value = handoff.backend_provider || 'Supabase';
+                    document.getElementById('handoff_backend_project_url').value = handoff.backend_project_url || '';
+                    document.getElementById('handoff_database_provider').value = handoff.database_provider || 'Supabase';
+                    document.getElementById('handoff_database_project_url').value = handoff.database_project_url || '';
+                    document.getElementById('handoff_paypal_email').value = handoff.paypal_account_email || '';
+                    document.getElementById('handoff_paypal_status').value = handoff.paypal_setup_status || 'Not Started';
+                    document.getElementById('handoff_hosting_status').value = handoff.hosting_status || 'Active';
+                    document.getElementById('handoff_maintenance_plan').value = handoff.maintenance_plan || 'Standard';
+                    document.getElementById('handoff_monthly_fee').value = handoff.monthly_support_fee || '';
+                    document.getElementById('handoff_support_email').value = handoff.support_contact_email || '';
+                    document.getElementById('handoff_support_phone').value = handoff.support_phone || '';
+                    document.getElementById('handoff_launch_date').value = handoff.launch_date || '';
+                    document.getElementById('handoff_renewal_date').value = handoff.renewal_date || '';
+                    document.getElementById('handoff_features').value = handoff.included_features?.join(', ') || '';
+                    document.getElementById('handoff_limitations').value = handoff.known_limitations || '';
+                    document.getElementById('handoff_next_steps').value = handoff.client_next_steps || '';
+                    document.getElementById('handoff_private_notes').value = handoff.admin_private_notes || '';
+                }
+            }
+        }
+
+        function closeHandoffForm() {
+            document.getElementById('handoffModal').style.display = 'none';
+            document.getElementById('handoffForm').reset();
+        }
+
+        function saveHandoff(event) {
+            event.preventDefault();
+            const handoff = {
+                id: Date.now().toString(),
+                client_id: document.getElementById('handoff_client_id').value,
+                order_id: document.getElementById('handoff_order_id').value,
+                business_name: document.getElementById('handoff_business_name').value,
+                platform_name: document.getElementById('handoff_platform_name').value,
+                package_type: document.getElementById('handoff_package_type').value,
+                platform_url: document.getElementById('handoff_platform_url').value,
+                admin_login_url: document.getElementById('handoff_admin_login_url').value,
+                client_admin_email: document.getElementById('handoff_client_admin_email').value,
+                temporary_password_or_reset_note: document.getElementById('handoff_temp_password').value,
+                domain_provider: document.getElementById('handoff_domain_provider').value,
+                domain_login_url: document.getElementById('handoff_domain_login_url').value,
+                domain_notes: document.getElementById('handoff_domain_notes').value,
+                frontend_provider: document.getElementById('handoff_frontend_provider').value,
+                frontend_project_url: document.getElementById('handoff_frontend_project_url').value,
+                backend_provider: document.getElementById('handoff_backend_provider').value,
+                backend_project_url: document.getElementById('handoff_backend_project_url').value,
+                database_provider: document.getElementById('handoff_database_provider').value,
+                database_project_url: document.getElementById('handoff_database_project_url').value,
+                paypal_account_email: document.getElementById('handoff_paypal_email').value,
+                paypal_setup_status: document.getElementById('handoff_paypal_status').value,
+                hosting_status: document.getElementById('handoff_hosting_status').value,
+                maintenance_plan: document.getElementById('handoff_maintenance_plan').value,
+                monthly_support_fee: parseFloat(document.getElementById('handoff_monthly_fee').value) || 0,
+                support_contact_email: document.getElementById('handoff_support_email').value,
+                support_phone: document.getElementById('handoff_support_phone').value,
+                launch_date: document.getElementById('handoff_launch_date').value,
+                renewal_date: document.getElementById('handoff_renewal_date').value,
+                included_features: document.getElementById('handoff_features').value.split(',').map(f => f.trim()).filter(f => f),
+                known_limitations: document.getElementById('handoff_limitations').value,
+                client_next_steps: document.getElementById('handoff_next_steps').value,
+                admin_private_notes: document.getElementById('handoff_private_notes').value,
+                handoff_status: document.getElementById('handoff_status').value,
+                content_rights_acknowledgement: true,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+            const handoffs = getHandoffs();
+            const existingIndex = handoffs.findIndex(h => h.id === handoff.id);
+            if (existingIndex >= 0) {
+                handoffs[existingIndex] = handoff;
+            } else {
+                handoffs.push(handoff);
+            }
+            localStorage.setItem('maicorp_handoffs', JSON.stringify(handoffs));
+            closeHandoffForm();
+            loadHandoffs();
+        }
+
+        function getHandoffs() {
+            const handoffs = localStorage.getItem('maicorp_handoffs');
+            return handoffs ? JSON.parse(handoffs) : [];
+        }
+
+        function loadHandoffs() {
+            const handoffs = getHandoffs();
+            const container = document.getElementById('handoffsContainer');
+            if (handoffs.length === 0) {
+                container.innerHTML = '<div class="no-data">No handoffs yet</div>';
+                return;
+            }
+            container.innerHTML = handoffs.map(h => `
+                <div class="order-details-card">
+                    <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px;">
+                        <h3 style="margin:0;">${escapeHtml(h.business_name)} - ${escapeHtml(h.platform_name)}</h3>
+                        <span style="padding:4px 12px;background:rgba(59,130,246,.2);color:#60a5fa;border-radius:20px;font-size:11px;font-weight:600;border:1px solid rgba(59,130,246,.3);">${h.handoff_status?.toUpperCase()}</span>
+                    </div>
+                    <div class="order-detail-row">
+                        <span class="order-detail-label">Platform URL</span>
+                        <span class="order-detail-value">${escapeHtml(h.platform_url || 'Not set')}</span>
+                    </div>
+                    <div class="order-detail-row">
+                        <span class="order-detail-label">Client Email</span>
+                        <span class="order-detail-value">${escapeHtml(h.client_admin_email || 'Not set')}</span>
+                    </div>
+                    <div class="order-detail-row">
+                        <span class="order-detail-label">Maintenance Plan</span>
+                        <span class="order-detail-value">${escapeHtml(h.maintenance_plan || 'N/A')}</span>
+                    </div>
+                    <div class="order-detail-row">
+                        <span class="order-detail-label">Launch Date</span>
+                        <span class="order-detail-value">${h.launch_date || 'Pending'}</span>
+                    </div>
+                    <div style="margin-top:16px;display:flex;gap:10px;">
+                        <button class="btn btn--secondary btn-small" onclick="openHandoffForm('${h.id}')">Edit</button>
+                        <button class="btn btn-small" style="background:rgba(34,197,94,.2);color:#4ade80;border:1px solid rgba(34,197,94,.3);" onclick="copyHandoffSummary('${h.id}')">Copy Summary</button>
+                        <button class="btn btn-small" style="background:rgba(239,68,68,.2);color:#fca5a5;border:1px solid rgba(239,68,68,.3);" onclick="deleteHandoff('${h.id}')">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function copyHandoffSummary(id) {
+            const handoffs = getHandoffs();
+            const h = handoffs.find(h => h.id === id);
+            if (!h) return;
+            const summary = `
+MAICORP PLATFORM HANDOFF SUMMARY
+================================
+Business: ${h.business_name}
+Platform: ${h.platform_name}
+URL: ${h.platform_url}
+Admin: ${h.admin_login_url}
+Email: ${h.client_admin_email}
+Plan: ${h.maintenance_plan}
+Monthly Fee: $${h.monthly_support_fee || 0}
+Support: ${h.support_contact_email} | ${h.support_phone}
+Features: ${h.included_features?.join(', ') || 'N/A'}
+
+CONTENT OWNERSHIP:
+Client retains ownership of all original content, branding, images, service descriptions, pricing, customer information, uploads, and business materials provided to or uploaded into the platform. MaiCorp does not claim ownership of client content.
+            `.trim();
+            navigator.clipboard.writeText(summary).then(() => {
+                alert('Handoff summary copied to clipboard!');
+            });
+        }
+
+        function deleteHandoff(id) {
+            if (!confirm('Delete this handoff?')) return;
+            const handoffs = getHandoffs().filter(h => h.id !== id);
+            localStorage.setItem('maicorp_handoffs', JSON.stringify(handoffs));
+            loadHandoffs();
+        }
+
+        // Utilities
+        function formatDate(dateStr, type = 'date') {
+            const date = new Date(dateStr);
+            if (type === 'time') {
+                return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+            }
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const map = {
+                '&': '&amp;', '<': '&lt;', '>': '&gt;',
+                '"': '&quot;', "'": '&#039;'
+            };
+            return String(text).replace(/[&<>"']/g, m => map[m]);
+        }
+
+        // Initialize
+        checkAuth();
+    </script>
+</body>
+</html>

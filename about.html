@@ -3,8 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="About MaiCorp — our mission, values, and the team behind transformative digital platforms.">
-    <title>About — MaiCorp</title>
+    <meta name="description" content="About MaiCorp — a technology company building custom business websites, admin dashboards, digital platforms, and MAI-powered products for creators, service businesses, and modern brands.">
+    <meta name="keywords" content="MaiCorp, MAI, custom websites, business websites, admin dashboard, PayPal checkout, web development, platform development, Denver technology company, creator platforms">
+    <meta name="author" content="MaiCorp">
+    <meta property="og:title" content="About MaiCorp — Building Digital Platforms That Work">
+    <meta property="og:description" content="MaiCorp builds websites, admin apps, checkout systems, and scalable digital platforms for real businesses that need technology to save time and grow.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://maicorp.online/about.html">
+    <title>About MaiCorp — Websites, Admin Apps & Digital Platforms</title>
+    <link rel="canonical" href="https://maicorp.online/about.html">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,24 +19,37 @@
     <!-- Header -->
     <header class="header" id="header">
         <div class="container">
-            <a href="index.html" class="logo">
+            <a href="index.html" class="logo" aria-label="MaiCorp Home">
                 <div class="logo-icon">MC</div>
                 <span>maicorp</span>
             </a>
-            <nav>
+            <nav aria-label="Main navigation">
                 <ul class="nav" id="nav">
                     <li><a href="index.html">Home</a></li>
                     <li><a href="services.html">Services</a></li>
                     <li><a href="projects.html">Projects</a></li>
                     <li><a href="pricing.html">Pricing</a></li>
-                    <li><a href="about.html" class="active">About</a></li>
+                    <li><a href="about.html" class="active" aria-current="page">About</a></li>
                     <li><a href="contact.html">Contact</a></li>
                 </ul>
             </nav>
             <div class="header-cta">
                 <a href="contact.html" class="btn btn--primary btn--sm">Get Started</a>
-                <button class="mobile-menu-toggle" id="menuToggle" aria-label="Toggle menu">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <button class="header-tab" id="messageTab" onclick="openAuthOrRedirect('message')" type="button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M216,40H40A16,16,0,0,0,24,56V192a16,16,0,0,0,16,16H75.06l37.75,37.75a8,8,0,0,0,11.32,0L216,215.06V56A16,16,0,0,0,200,40Zm-96,84a12,12,0,1,1,12-12A12,12,0,0,1,120,124Zm52,0a12,12,0,1,1,12-12A12,12,0,0,1,172,124Zm0,48a12,12,0,1,1,12-12A12,12,0,0,1,172,172ZM120,172a12,12,0,1,1,12-12A12,12,0,0,1,120,172ZM40,56H216l-.73,11.51L200,184.63V56a8,8,0,0,0-8-8H64a8,8,0,0,0-8,8ZM200,200.13l-35.73-35.73a16,16,0,0,0-11.32-4.75H40V192a8,8,0,0,0,8,8H200a8,8,0,0,0,8-8Z"></path></svg>
+                    <span>Message</span>
+                </button>
+                <button class="header-tab" id="orderTab" onclick="openAuthOrRedirect('order')" type="button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M216,40H40A16,16,0,0,0,24,56V208a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm-56,24h24a8,8,0,0,1,0,16H160V96h24a8,8,0,0,1,0,16H160v16h24a8,8,0,0,1,0,16H160v16a8,8,0,0,1-16,0V144H120a8,8,0,0,1,0-16h24V112H120a8,8,0,0,1,0-16H96V72H56a8,8,0,0,1,0-16H96V168H64a8,8,0,0,1,0-16H96V128H56a8,8,0,0,1,0-16H96V96H56a8,8,0,0,1,0-16H96V72ZM72,64H88V96H72Zm112,0H128V96h56Zm0,48H128V144h56Zm0,48H128v16h56Z"></path></svg>
+                    <span>Order</span>
+                </button>
+                <button class="header-tab" id="customerTab" onclick="openAuthOrRedirect('customer')" type="button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,184a80,80,0,1,1,80-80A80.09,80.09,0,0,1,128,208Zm-20-96a12,12,0,1,1-12,12A12,12,0,0,1,108,112Zm0,24a12,12,0,1,1,12-12A12,12,0,0,1,108,136Zm44,0a12,12,0,1,1-12-12A12,12,0,0,1,152,136Zm0-24a12,12,0,1,1,12,12A12,12,0,0,1,152,112Zm0-24a12,12,0,1,1,12,12A12,12,0,0,1,152,88Z"></path></svg>
+                    <span>Support</span>
+                </button>
+                <a href="auth.html" class="btn btn--primary btn--sm" id="authBtn">Sign In</a>
+                <button class="mobile-menu-toggle" id="menuToggle" aria-label="Toggle menu" type="button">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
                     </svg>
                 </button>
@@ -38,94 +58,188 @@
     </header>
 
     <main>
-        <!-- Page Hero -->
-        <section class="page-hero">
+        <!-- Hero -->
+        <section class="page-hero about-hero">
             <div class="container">
-                <div class="section-label">About Us</div>
-                <h1>Technology That Serves People</h1>
-                <p>Founded on the principle that technology should solve real problems and create real value.</p>
+                <div class="section-label">About MaiCorp</div>
+                <h1>We Build Business Technology That Saves Time, Gets Orders, and Creates Revenue.</h1>
+                <p>MaiCorp helps service businesses, creators, and growing brands move from outdated online presence to real digital systems — websites, checkout flows, admin dashboards, booking tools, and scalable platforms built for everyday operations.</p>
+                <div class="cta-actions" style="margin-top: var(--space-8); justify-content: center;">
+                    <a href="pricing.html" class="btn btn--primary btn--lg">View Website Packages</a>
+                    <a href="contact.html" class="btn btn--outline-white btn--lg">Talk to MaiCorp</a>
+                </div>
             </div>
         </section>
 
-        <!-- About Content -->
+        <!-- Positioning -->
         <section class="section">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-label">What We Do</div>
+                    <h2 class="section-title">Not Just a Website. A Digital Command Center.</h2>
+                    <p class="section-subtitle">Many businesses do not have time to manage technology. MaiCorp builds the front-end website customers see and the private admin app owners use to manage real work.</p>
+                </div>
+
+                <div class="values-grid stagger-children">
+                    <article class="value-card">
+                        <div class="value-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 7.5A2.5 2.5 0 015.5 5h13A2.5 2.5 0 0121 7.5v9A2.5 2.5 0 0118.5 19h-13A2.5 2.5 0 013 16.5v-9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M7 9h10M7 13h6"/></svg>
+                        </div>
+                        <h3>Customer-Facing Websites</h3>
+                        <p>Premium pages for construction companies, mechanics, plumbers, electricians, teachers, salons, barbers, local services, and modern brands.</p>
+                    </article>
+
+                    <article class="value-card">
+                        <div class="value-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 12h16M4 18h7"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 16l2 2 4-4"/></svg>
+                        </div>
+                        <h3>Private Admin Apps</h3>
+                        <p>Each client can get a dedicated admin experience to view appointments, bookings, orders, messages, leads, support requests, and service details.</p>
+                    </article>
+
+                    <article class="value-card">
+                        <div class="value-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 10h18M7 15h.01M11 15h2M6 6h12a3 3 0 013 3v6a3 3 0 01-3 3H6a3 3 0 01-3-3V9a3 3 0 013-3z"/></svg>
+                        </div>
+                        <h3>PayPal-Ready Checkout</h3>
+                        <p>Packages are designed to connect with PayPal-first payments so customers can buy a site package, submit details, and start the order flow cleanly.</p>
+                    </article>
+
+                    <article class="value-card">
+                        <div class="value-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 3v18M5 8h14M7 16h10"/></svg>
+                        </div>
+                        <h3>One Free UI Change</h3>
+                        <p>Clients get one free UI change after delivery, giving them room to adjust the look while keeping the project scope clear and professional.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Story -->
+        <section class="section section--gray">
             <div class="container container--narrow">
-                <div class="section-header" style="margin-bottom: var(--space-12);">
-                    <h2 class="section-title" style="text-align: left;">Our Story</h2>
+                <div class="section-header" style="margin-bottom: var(--space-10);">
+                    <div class="section-label">Our Story</div>
+                    <h2 class="section-title" style="text-align: left;">Built From Real Platform Experience.</h2>
                 </div>
                 <div style="font-size: var(--text-lg); color: var(--color-gray-600); line-height: 1.9;">
-                    <p style="margin-bottom: var(--space-6);">MaiCorp was founded on the principle that technology should serve humanity — not the other way around. We build digital platforms that address real-world challenges, combining deep industry expertise with cutting-edge technology to create solutions that drive meaningful impact.</p>
-                    <p style="margin-bottom: var(--space-6);">Our team doesn't just write code. We think strategically about every project, understanding the business context, the user needs, and the technical constraints before we build a single line. This approach ensures that what we deliver isn't just functional — it's valuable.</p>
-                    <p>We've built and launched our own platforms, which means we understand the full lifecycle from concept to scale. That experience shapes how we work with every client.</p>
+                    <p style="margin-bottom: var(--space-6);">MaiCorp was created with a simple belief: technology should make business easier, not harder. A good website should do more than look nice. It should help customers understand what you offer, submit the right information, pay securely, and give the business owner a clear place to manage what happens next.</p>
+                    <p style="margin-bottom: var(--space-6);">We are not building from theory. MaiCorp is also the foundation behind MAI-branded platform ideas and internal systems, giving us hands-on experience with authentication, dashboards, payments, media platforms, creator tools, and operational workflows.</p>
+                    <p>That experience shapes how we serve clients. Whether someone needs a simple service website or a full platform, we think through the customer journey, admin workflow, payment path, data structure, and long-term growth from the start.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Who We Build For -->
+        <section class="section">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-label">Industries We Serve</div>
+                    <h2 class="section-title">Built for People Who Are Busy Running the Business.</h2>
+                    <p class="section-subtitle">MaiCorp is designed for owners who need a professional online system but do not have time to babysit a website every day.</p>
+                </div>
+
+                <div class="values-grid stagger-children">
+                    <article class="value-card"><h3>Construction</h3><p>Project inquiry forms, quote requests, service galleries, before-and-after pages, lead tracking, and customer communication.</p></article>
+                    <article class="value-card"><h3>Mechanics</h3><p>Repair requests, appointment scheduling, service menus, vehicle detail intake, customer updates, and shop contact flows.</p></article>
+                    <article class="value-card"><h3>Plumbers & Electricians</h3><p>Emergency service CTAs, booking forms, service areas, job requests, maintenance plans, and admin-side request review.</p></article>
+                    <article class="value-card"><h3>Teachers & Coaches</h3><p>Class info, booking pages, student or client intake, payment options, resource pages, and simple admin tools.</p></article>
+                    <article class="value-card"><h3>Salons & Barbers</h3><p>Service menus, appointment requests, portfolio galleries, stylist profiles, client notes, and booking-oriented landing pages.</p></article>
+                    <article class="value-card"><h3>Creators & Brands</h3><p>Premium brand sites, storefront pages, fan/community funnels, product showcases, and launch-ready digital experiences.</p></article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Process -->
+        <section class="section section--gray">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-label">How We Work</div>
+                    <h2 class="section-title">A Clear Build Process From Package to Launch.</h2>
+                    <p class="section-subtitle">The goal is to make the buying process feel simple for the client and organized for MaiCorp.</p>
+                </div>
+
+                <div class="values-grid stagger-children">
+                    <article class="value-card">
+                        <h3>1. Choose a Package</h3>
+                        <p>Clients select the website or platform package that matches their business type, budget, and required functionality.</p>
+                    </article>
+                    <article class="value-card">
+                        <h3>2. Submit Project Details</h3>
+                        <p>Customers provide business info, service details, preferred features, design notes, and additional instructions before the build starts.</p>
+                    </article>
+                    <article class="value-card">
+                        <h3>3. Pay Through PayPal</h3>
+                        <p>Checkout is built around PayPal so orders are tracked through a clear payment flow before work begins.</p>
+                    </article>
+                    <article class="value-card">
+                        <h3>4. Build the Website</h3>
+                        <p>MaiCorp creates the public website, key pages, forms, and admin-side workflow based on the selected package.</p>
+                    </article>
+                    <article class="value-card">
+                        <h3>5. Review and Adjust</h3>
+                        <p>The client receives one free UI change after delivery, helping finalize the visual direction without endless revision confusion.</p>
+                    </article>
+                    <article class="value-card">
+                        <h3>6. Launch and Manage</h3>
+                        <p>The site goes live, and the client can use their admin tools to manage orders, bookings, messages, and customer activity.</p>
+                    </article>
                 </div>
             </div>
         </section>
 
         <!-- Values -->
-        <section class="section section--gray">
+        <section class="section">
             <div class="container">
                 <div class="section-header">
-                    <div class="section-label">Our Values</div>
-                    <h2 class="section-title">What Drives Us</h2>
-                    <p class="section-subtitle">The principles behind every decision we make and every platform we build.</p>
+                    <div class="section-label">Our Standards</div>
+                    <h2 class="section-title">What Drives Every MaiCorp Build.</h2>
+                    <p class="section-subtitle">The principles behind every website, admin app, checkout flow, and platform we create.</p>
                 </div>
                 <div class="values-grid stagger-children">
-                    <div class="value-card">
+                    <article class="value-card">
                         <div class="value-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18"/>
-                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18"/></svg>
                         </div>
-                        <h3>Innovation</h3>
-                        <p>We embrace new technologies and approaches, always looking for better ways to solve problems and create value.</p>
-                    </div>
-                    <div class="value-card">
+                        <h3>Strategy First</h3>
+                        <p>We think about the business model, the customer path, and the admin workflow before designing the page.</p>
+                    </article>
+                    <article class="value-card">
                         <div class="value-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                         </div>
                         <h3>Transparency</h3>
-                        <p>Clear communication, honest timelines, and open processes. You always know where your project stands.</p>
-                    </div>
-                    <div class="value-card">
+                        <p>Clear scope, clear package expectations, clear payment flow, and a real order process that clients understand.</p>
+                    </article>
+                    <article class="value-card">
                         <div class="value-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.745 3.745 0 011.043 3.296A3.745 3.745 0 0121 12z"/>
-                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.745 3.745 0 011.043 3.296A3.745 3.745 0 0121 12z"/></svg>
                         </div>
                         <h3>Quality</h3>
-                        <p>We don't cut corners. Every platform we build meets the highest standards for performance, security, and reliability.</p>
-                    </div>
-                    <div class="value-card">
+                        <p>Every page should feel polished, load cleanly, guide the customer, and support real business operations.</p>
+                    </article>
+                    <article class="value-card">
                         <div class="value-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
-                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
                         </div>
-                        <h3>Client-Focused</h3>
-                        <p>Your success is our success. We build lasting partnerships based on trust, results, and mutual respect.</p>
-                    </div>
-                    <div class="value-card">
+                        <h3>Owner-Focused</h3>
+                        <p>We build for the person who has to run the business after the website goes live.</p>
+                    </article>
+                    <article class="value-card">
                         <div class="value-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/>
-                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
                         </div>
                         <h3>Speed</h3>
-                        <p>Agile development and decisive action. We move fast without sacrificing the quality that matters.</p>
-                    </div>
-                    <div class="value-card">
+                        <p>Fast movement matters, but the build still needs structure, clean UX, and a professional checkout path.</p>
+                    </article>
+                    <article class="value-card">
                         <div class="value-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17l-5.384-3.07A2.25 2.25 0 004.5 13.5v0c0 1.068.752 1.977 1.786 2.198l5.384 3.07a2.25 2.25 0 002.26 0l5.384-3.07A2.25 2.25 0 0020.5 13.5v0c0-1.068-.752-1.977-1.786-2.198l-5.384-3.07a2.25 2.25 0 00-2.26 0z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M11.42 8.17l-5.384-3.07A2.25 2.25 0 004.5 6.5v0c0 1.068.752 1.977 1.786 2.198l5.384 3.07a2.25 2.25 0 002.26 0l5.384-3.07A2.25 2.25 0 0020.5 6.5v0c0-1.068-.752-1.977-1.786-2.198l-5.384-3.07a2.25 2.25 0 00-2.26 0z"/>
-                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M11.42 15.17l-5.384-3.07A2.25 2.25 0 004.5 13.5v0c0 1.068.752 1.977 1.786 2.198l5.384 3.07a2.25 2.25 0 002.26 0l5.384-3.07A2.25 2.25 0 0020.5 13.5v0c0-1.068-.752-1.977-1.786-2.198l-5.384-3.07a2.25 2.25 0 00-2.26 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M11.42 8.17l-5.384-3.07A2.25 2.25 0 004.5 6.5v0c0 1.068.752 1.977 1.786 2.198l5.384 3.07a2.25 2.25 0 002.26 0l5.384-3.07A2.25 2.25 0 0020.5 6.5v0c0-1.068-.752-1.977-1.786-2.198l-5.384-3.07a2.25 2.25 0 00-2.26 0z"/></svg>
                         </div>
                         <h3>Scalability</h3>
-                        <p>We build for growth. Every architectural decision considers where you'll be in one year, not just today.</p>
-                    </div>
+                        <p>We build systems that can start simple and grow into larger dashboards, portals, automations, and platform features.</p>
+                    </article>
                 </div>
             </div>
         </section>
@@ -133,11 +247,12 @@
         <!-- CTA -->
         <section class="cta-section">
             <div class="container">
-                <h2>Work With a Team That Gets It</h2>
-                <p>Let's discuss your project and see how MaiCorp can help you build something that matters.</p>
+                <div class="section-label" style="color: rgba(255,255,255,0.75);">Ready to Build?</div>
+                <h2>Give Your Business a Website That Actually Works.</h2>
+                <p>Choose a package, submit your business details, pay through PayPal, and let MaiCorp build the digital system your customers and team can use.</p>
                 <div class="cta-actions">
-                    <a href="contact.html" class="btn btn--primary btn--lg">Get in Touch</a>
-                    <a href="projects.html" class="btn btn--outline-white btn--lg">See Our Work</a>
+                    <a href="pricing.html" class="btn btn--primary btn--lg">Start With Pricing</a>
+                    <a href="contact.html" class="btn btn--outline-white btn--lg">Request a Custom Quote</a>
                 </div>
             </div>
         </section>
@@ -148,11 +263,11 @@
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-brand">
-                    <a href="index.html" class="logo">
+                    <a href="index.html" class="logo" aria-label="MaiCorp Home">
                         <div class="logo-icon">MC</div>
                         <span>maicorp</span>
                     </a>
-                    <p>Building transformative digital platforms that solve real-world problems and drive measurable growth.</p>
+                    <p>Building websites, admin apps, checkout systems, and digital platforms that help real businesses save time and grow.</p>
                 </div>
                 <div class="footer-col">
                     <h4>Company</h4>
@@ -163,10 +278,10 @@
                 </div>
                 <div class="footer-col">
                     <h4>Services</h4>
-                    <a href="services.html">Web Development</a>
+                    <a href="services.html">Business Websites</a>
+                    <a href="services.html">Admin Dashboards</a>
                     <a href="services.html">Platform Development</a>
-                    <a href="services.html">Mobile Design</a>
-                    <a href="services.html">Support</a>
+                    <a href="services.html">PayPal Checkout</a>
                 </div>
                 <div class="footer-col">
                     <h4>Contact</h4>
@@ -179,17 +294,17 @@
                 <p>&copy; 2026 MaiCorp. All rights reserved.</p>
                 <div class="footer-social">
                     <a href="#" aria-label="LinkedIn">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244"/>
                         </svg>
                     </a>
                     <a href="#" aria-label="Twitter">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"/>
                         </svg>
                     </a>
                     <a href="#" aria-label="GitHub">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"/>
                         </svg>
                     </a>
@@ -199,24 +314,69 @@
     </footer>
 
     <script>
-        const header = document.getElementById('header');
-        window.addEventListener('scroll', () => {
-            header.classList.toggle('scrolled', window.scrollY > 20);
-        });
+        function getStoredUser() {
+            try {
+                const rawUser = localStorage.getItem('maicorp_user');
+                return rawUser ? JSON.parse(rawUser) : null;
+            } catch (error) {
+                console.warn('Invalid stored MaiCorp user data. Clearing local session.', error);
+                localStorage.removeItem('maicorp_user');
+                return null;
+            }
+        }
+
+        function checkAuthStatus() {
+            const userData = getStoredUser();
+            const btn = document.getElementById('authBtn');
+
+            if (!btn) return;
+
+            if (userData) {
+                btn.textContent = userData.role === 'ceo' ? 'Admin Dashboard' : 'My Dashboard';
+                btn.href = userData.role === 'ceo' ? 'dashboard.html' : 'client.html';
+                btn.classList.add('btn--primary');
+            } else {
+                btn.textContent = 'Sign In';
+                btn.href = 'auth.html';
+            }
+        }
+
+        function openAuthOrRedirect(tab) {
+            const userData = getStoredUser();
+
+            if (!userData) {
+                alert('Please sign in first to use this feature.');
+                window.location.href = 'auth.html';
+                return;
+            }
+
+            const ceoRoutes = {
+                message: 'dashboard.html#submissions',
+                order: 'dashboard.html#orders',
+                customer: 'dashboard.html#clients'
+            };
+
+            const clientRoutes = {
+                message: 'contact.html',
+                order: 'client.html#new-order',
+                customer: 'client.html#support'
+            };
+
+            const routes = userData.role === 'ceo' ? ceoRoutes : clientRoutes;
+            window.location.href = routes[tab] || 'client.html';
+        }
 
         const menuToggle = document.getElementById('menuToggle');
         const nav = document.getElementById('nav');
-        menuToggle.addEventListener('click', () => {
-            nav.classList.toggle('open');
-        });
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) entry.target.classList.add('visible');
+        if (menuToggle && nav) {
+            menuToggle.addEventListener('click', function () {
+                nav.classList.toggle('nav--open');
+                menuToggle.setAttribute('aria-expanded', nav.classList.contains('nav--open') ? 'true' : 'false');
             });
-        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        }
 
-        document.querySelectorAll('.fade-in, .stagger-children').forEach(el => observer.observe(el));
+        checkAuthStatus();
     </script>
 </body>
 </html>

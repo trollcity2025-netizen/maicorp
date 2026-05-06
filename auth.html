@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Login to your MaiCorp account">
+    <title>Auth — MaiCorp</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .auth-card {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 450px;
+        }
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .auth-header h1 {
+            color: #1a1a2e;
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        .auth-header p {
+            color: #666;
+        }
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .auth-tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 16px;
+            font-weight: 600;
+            color: #999;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        .auth-tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+        .auth-form {
+            display: none;
+        }
+        .auth-form.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn--primary {
+            background: #1a1a2e;
+            color: white;
+        }
+        .btn--primary:hover {
+            background: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        .btn--secondary {
+            background: #f5f5f5;
+            color: #333;
+        }
+        .btn--secondary:hover {
+            background: #e0e0e0;
+        }
+        .auth-footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+        .auth-footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        .error-message {
+            background: #fee;
+            color: #c00;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .success-message {
+            background: #efe;
+            color: #0a0;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1>MaiCorp</h1>
+                <p>Sign in to access your dashboard</p>
+            </div>
+            
+            <div class="auth-tabs">
+                <button class="auth-tab active" onclick="switchAuthTab('login')">Sign In</button>
+                <button class="auth-tab" onclick="switchAuthTab('register')">Sign Up</button>
+            </div>
+
+            <div class="error-message" id="errorMessage"></div>
+            <div class="success-message" id="successMessage"></div>
+
+            <!-- Login Form -->
+            <form class="auth-form active" id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" name="email" placeholder="you@company.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" name="password" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn btn--primary">Sign In</button>
+            </form>
+
+            <!-- Register Form -->
+            <form class="auth-form" id="registerForm" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label for="registerName">Full Name</label>
+                    <input type="text" id="registerName" name="name" placeholder="John Doe" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email Address</label>
+                    <input type="email" id="registerEmail" name="email" placeholder="you@company.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Password</label>
+                    <input type="password" id="registerPassword" name="password" placeholder="Create a password" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerCompany">Company Name</label>
+                    <input type="text" id="registerCompany" name="company" placeholder="Your company name">
+                </div>
+                <button type="submit" class="btn btn--primary">Create Account</button>
+            </form>
+
+            <div class="auth-footer">
+                <p>By signing up, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Current user state
+        let currentUser = null;
+
+        // Check if user is already logged in
+        function checkSession() {
+            const user = localStorage.getItem('maicorp_user');
+            if (user) {
+                currentUser = JSON.parse(user);
+                window.location.href = 'dashboard.html';
+            }
+        }
+
+        // Switch between login/register tabs
+        function switchAuthTab(tab) {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const tabs = document.querySelectorAll('.auth-tab');
+            
+            if (tab === 'login') {
+                loginForm.classList.add('active');
+                registerForm.classList.remove('active');
+                tabs[0].classList.add('active');
+                tabs[1].classList.remove('active');
+            } else {
+                loginForm.classList.remove('active');
+                registerForm.classList.add('active');
+                tabs[0].classList.remove('active');
+                tabs[1].classList.add('active');
+            }
+            clearMessages();
+        }
+
+        // Show error/success messages
+        function showError(message) {
+            const el = document.getElementById('errorMessage');
+            el.textContent = message;
+            el.style.display = 'block';
+            document.getElementById('successMessage').style.display = 'none';
+        }
+
+        function showSuccess(message) {
+            const el = document.getElementById('successMessage');
+            el.textContent = message;
+            el.style.display = 'block';
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        function clearMessages() {
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+        }
+
+        // Get all users from storage
+        function getAllUsers() {
+            const users = localStorage.getItem('maicorp_users');
+            return users ? JSON.parse(users) : [];
+        }
+
+        // Save users to storage
+        function saveUsers(users) {
+            localStorage.setItem('maicorp_users', JSON.stringify(users));
+        }
+
+        // Handle login
+        async function handleLogin(e) {
+            e.preventDefault();
+            clearMessages();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            const users = getAllUsers();
+            const user = users.find(u => u.email === email && u.password === password);
+
+            if (user) {
+                currentUser = user;
+                localStorage.setItem('maicorp_user', JSON.stringify(user));
+                window.location.href = 'dashboard.html';
+            } else {
+                showError('Invalid email or password');
+            }
+        }
+
+        // Handle registration
+        async function handleRegister(e) {
+            e.preventDefault();
+            clearMessages();
+            
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const company = document.getElementById('registerCompany').value;
+
+            const users = getAllUsers();
+            
+            if (users.find(u => u.email === email)) {
+                showError('An account with this email already exists');
+                return;
+            }
+
+            const isCEO = email.toLowerCase() === 'kain.towns@maicorp.online';
+            
+            const newUser = {
+                id: Date.now().toString(),
+                name,
+                email,
+                password,
+                company: company || name,
+                role: isCEO ? 'ceo' : 'client',
+                createdAt: new Date().toISOString(),
+                websiteCount: 0
+            };
+
+            users.push(newUser);
+            saveUsers(users);
+
+            // Initialize empty submissions for this user
+            const submissions = getSubmissions();
+            localStorage.setItem('maicorp_submissions', JSON.stringify(submissions));
+
+            showSuccess('Account created successfully! Sign in to continue.');
+            
+            // Switch to login form
+            setTimeout(() => {
+                document.getElementById('loginEmail').value = email;
+                document.getElementById('loginPassword').value = '';
+                switchAuthTab('login');
+            }, 1500);
+        }
+
+        // Get submissions
+        function getSubmissions() {
+            const subs = localStorage.getItem('maicorp_submissions');
+            return subs ? JSON.parse(subs) : [];
+        }
+
+        // Check session on page load
+        checkSession();
+    </script>
+</body>
+</html>

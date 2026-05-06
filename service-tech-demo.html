@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Service Technician Platform Demo — MaiCorp Business Platform for Service Technicians">
+    <title>Service Technician Platform Demo — MaiCorp</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .demo-hero {
+            position: relative;
+            min-height: 50vh;
+            display: flex;
+            align-items: center;
+            background:
+                radial-gradient(circle at 68% 44%, rgba(37,99,235,.34), transparent 31%),
+                radial-gradient(circle at 86% 32%, rgba(124,58,237,.28), transparent 28%),
+                linear-gradient(180deg, #020711 0%, #030914 100%);
+            overflow: hidden;
+            padding: 120px 0 60px;
+        }
+
+        .demo-hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(59,130,246,.07) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59,130,246,.07) 1px, transparent 1px);
+            background-size: 80px 80px;
+            mask-image: radial-gradient(circle at center, black 45%, transparent 82%);
+            pointer-events: none;
+        }
+
+        .demo-hero .container {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .demo-hero h1 {
+            font-size: clamp(36px, 5vw, 64px);
+            line-height: .96;
+            letter-spacing: -.06em;
+            font-weight: 950;
+            color: #fff;
+            margin-bottom: 16px;
+        }
+
+        .demo-hero p {
+            font-size: 18px;
+            color: #b7c2d6;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto 32px;
+        }
+
+        .demo-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .demo-features {
+            padding: 80px 0;
+            background: #020711;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+            margin-top: 48px;
+        }
+
+        .demo-feature {
+            background: rgba(15,23,42,.72);
+            border: 1px solid rgba(148,163,184,.14);
+            border-radius: 24px;
+            padding: 32px;
+            backdrop-filter: blur(18px);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .demo-feature:hover {
+            transform: translateY(-4px);
+        }
+
+        .demo-feature-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            color: white;
+            font-size: 28px;
+        }
+
+        .demo-feature h3 {
+            color: white;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .demo-feature p {
+            color: #94a3b8;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .demo-screenshots {
+            padding: 80px 0;
+            background: radial-gradient(circle at 50% 0%, rgba(37,99,235,.18), transparent 35%), #030914;
+        }
+
+        .demo-screenshot {
+            background: rgba(15,23,42,.72);
+            border: 1px solid rgba(148,163,184,.14);
+            border-radius: 24px;
+            padding: 48px;
+            backdrop-filter: blur(18px);
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .demo-screenshot h2 {
+            color: white;
+            font-size: 28px;
+            font-weight: 900;
+            margin-bottom: 16px;
+        }
+
+        .demo-screenshot p {
+            color: #b7c2d6;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .demo-cta {
+            padding: 80px 0;
+            background: #020711;
+            text-align: center;
+        }
+
+        .demo-cta h2 {
+            color: white;
+            font-size: 36px;
+            font-weight: 900;
+            margin-bottom: 16px;
+        }
+
+        .demo-cta p {
+            color: #b7c2d6;
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .demo-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 768px) {
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .demo-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">MC</div>
+                <span>maicorp</span>
+                <small>PLATFORM INFRASTRUCTURE</small>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="services.html">Services</a>
+                <a href="projects.html">Projects</a>
+                <a href="pricing.html">Pricing</a>
+                <a href="about.html">About</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <button class="auth-btn" onclick="showAuthModal()">Sign In</button>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Demo Hero -->
+        <section class="demo-hero">
+            <div class="container">
+                <div class="demo-badge">🔌 Service Technician Platform Demo</div>
+                <h1>Emergency Service Management Made Easy</h1>
+                <p>Handle emergency requests, schedule services, collect payments, and manage your technician business with complete digital infrastructure.</p>
+                <div class="demo-actions">
+                    <a href="contact.html" class="btn btn--primary">Get Started - $2,000</a>
+                    <a href="pricing.html" class="btn btn--outline-white">View All Plans</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Features -->
+        <section class="demo-features">
+            <div class="container">
+                <div class="section-header" style="text-align: center; margin-bottom: 48px;">
+                    <h2 style="color: white; font-size: 36px; font-weight: 900; margin-bottom: 16px;">Platform Features</h2>
+                    <p style="color: #b7c2d6; font-size: 18px; line-height: 1.6;">Everything you need to manage emergency and scheduled service calls</p>
+                </div>
+
+                <div class="demo-grid">
+                    <div class="demo-feature">
+                        <div class="demo-feature-icon">🚨</div>
+                        <h3>Emergency Requests</h3>
+                        <p>24/7 online emergency request forms with automatic notifications and priority routing.</p>
+                    </div>
+
+                    <div class="demo-feature">
+                        <div class="demo-feature-icon">📅</div>
+                        <h3>Smart Scheduling</h3>
+                        <p>Intelligent scheduling system with technician availability, location-based routing, and automated dispatch.</p>
+                    </div>
+
+                    <div class="demo-feature">
+                        <div class="demo-feature-icon">📱</div>
+                        <h3>Mobile Booking</h3>
+                        <p>Mobile-optimized booking system for customers to request services from anywhere.</p>
+                    </div>
+
+                    <div class="demo-feature">
+                        <div class="demo-feature-icon">💳</div>
+                        <h3>Payment Collection</h3>
+                        <p>Secure payment processing, invoice generation, and automated payment reminders.</p>
+                    </div>
+
+                    <div class="demo-feature">
+                        <div class="demo-feature-icon">👥</div>
+                        <h3>Client Management</h3>
+                        <p>Complete customer profiles, service history, communication logs, and relationship management.</p>
+                    </div>
+
+                    <div class="demo-feature">
+                        <div class="demo-feature-icon">📊</div>
+                        <h3>Business Analytics</h3>
+                        <p>Revenue tracking, service trends, technician performance, and profitability reports.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Screenshots Section -->
+        <section class="demo-screenshots">
+            <div class="container">
+                <div class="demo-screenshot">
+                    <h2>Live Platform Preview</h2>
+                    <p>This demo showcases the actual interface your customers and technicians will use. The platform is fully functional and ready for production use.</p>
+                    <div style="background: rgba(30,41,59,.8); border-radius: 12px; padding: 40px; margin: 32px 0; text-align: center; border: 2px dashed rgba(59,130,246,.3);">
+                        <div style="font-size: 48px; margin-bottom: 16px;">🖥️</div>
+                        <p style="color: #94a3b8; font-size: 16px;">Interactive demo interface would be embedded here</p>
+                        <p style="color: #60a5fa; font-size: 14px; margin-top: 8px;">Contact us for a personalized demo</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="demo-cta">
+            <div class="container">
+                <h2>Ready to Grow Your Service Business?</h2>
+                <p>Get your complete platform for just $2,000 setup + $125/month managed support</p>
+                <div class="demo-actions">
+                    <a href="contact.html" class="btn btn--primary btn--lg">Start Your Project</a>
+                    <a href="tel:7205019681" class="btn btn--outline-white btn--lg">Call 7205019681</a>
+                    <a href="pricing.html" class="btn btn--outline-white">Compare Plans</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <a href="index.html" class="logo">
+                        <div class="logo-icon">MC</div>
+                        <span>maicorp</span>
+                    </a>
+                    <p>Digital Infrastructure Built For Real Businesses</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Services</h4>
+                    <a href="services.html">Business Platforms</a>
+                    <a href="services.html">Managed Infrastructure</a>
+                    <a href="services.html">Custom Development</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <a href="about.html">About</a>
+                    <a href="projects.html">Projects</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <a href="tel:7205019681">720-501-9681</a>
+                    <a href="mailto:info@maicorp.online">info@maicorp.online</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 MaiCorp. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Auth Modal -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAuthModal()">&times;</span>
+            <h2>Sign In</h2>
+            <form id="authForm">
+                <input type="email" placeholder="Email" required>
+                <input type="password" placeholder="Password" required>
+                <button type="submit" class="btn btn--primary">Sign In</button>
+            </form>
+            <p>Don't have an account? <a href="contact.html">Contact us</a> to get started.</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Client Dashboard - MaiCorp">
+    <title>My Dashboard — MaiCorp</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .dashboard {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top right, rgba(37,99,235,.16), transparent 28%),
+                radial-gradient(circle at bottom left, rgba(124,58,237,.14), transparent 26%),
+                linear-gradient(180deg, #020711 0%, #030914 100%);
+            color: white;
+            position: relative;
+        }
+        .dashboard::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(59,130,246,.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59,130,246,.05) 1px, transparent 1px);
+            background-size: 70px 70px;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .dashboard-header {
+            background: rgba(3,8,18,.82);
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(255,255,255,.08);
+            padding: 0 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .dashboard-header-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+        }
+        .dashboard-logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo-cube {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(59,130,246,.4); }
+            50% { box-shadow: 0 0 0 8px rgba(59,130,246,0); }
+        }
+        .dashboard-nav {
+            display: flex;
+            gap: 4px;
+        }
+        .dashboard-nav button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            background: transparent;
+            color: rgba(255,255,255,.7);
+            position: relative;
+        }
+        .dashboard-nav button.active {
+            background: rgba(59,130,246,.15);
+            color: #60a5fa;
+            box-shadow: 0 0 20px rgba(59,130,246,.3);
+        }
+        .dashboard-nav button.active::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            background: #60a5fa;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(59,130,246,.8);
+        }
+        .dashboard-nav button:not(.active):hover {
+            background: rgba(255,255,255,.05);
+            color: white;
+        }
+        .dashboard-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .dashboard-user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(59,130,246,.4);
+        }
+        .dashboard-user-info {
+            text-align: right;
+        }
+        .dashboard-user-name {
+            font-weight: 600;
+            color: white;
+        }
+        .dashboard-user-role {
+            font-size: 12px;
+            color: rgba(255,255,255,.5);
+            text-transform: uppercase;
+        }
+        .dashboard-logout {
+            padding: 8px 16px;
+            background: rgba(239,68,68,.15);
+            color: #fca5a5;
+            border: 1px solid rgba(239,68,68,.3);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-left: 10px;
+            transition: all 0.3s;
+        }
+        .dashboard-logout:hover {
+            background: rgba(239,68,68,.25);
+            color: white;
+        }
+
+        .dashboard-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .dashboard-section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .dashboard-section.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: rgba(15,23,42,.72);
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid rgba(148,163,184,.14);
+            backdrop-filter: blur(18px);
+        }
+        .stat-card h3 {
+            color: rgba(255,255,255,.6);
+            font-size: 14px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+        .stat-card .value {
+            font-size: 36px;
+            font-weight: bold;
+            color: white;
+        }
+        .stat-card .trend {
+            font-size: 14px;
+            color: #4ade80;
+            margin-top: 4px;
+        }
+
+        .card {
+            background: rgba(15,23,42,.72);
+            border-radius: 12px;
+            border: 1px solid rgba(148,163,184,.14);
+            backdrop-filter: blur(18px);
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        .card h2 {
+            color: white;
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(59,130,246,.2);
+            color: #60a5fa;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: rgba(255,255,255,.9);
+            margin-bottom: 8px;
+        }
+        .form-group select,
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid rgba(148,163,184,.2);
+            border-radius: 16px;
+            background: rgba(255,255,255,.05);
+            color: white;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+        .form-group select:focus,
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59,130,246,.12);
+        }
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .orders-table-container {
+            background: rgba(15,23,42,.72);
+            border-radius: 12px;
+            border: 1px solid rgba(148,163,184,.14);
+            backdrop-filter: blur(18px);
+            overflow: hidden;
+        }
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .orders-table th {
+            text-align: left;
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(148,163,184,.14);
+            color: rgba(255,255,255,.5);
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+        .orders-table td {
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(148,163,184,.08);
+            color: rgba(255,255,255,.8);
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-badge.pending { background: rgba(251,191,36,.2); color: #fbbf24; }
+        .status-badge.active { background: rgba(74,222,128,.2); color: #4ade80; }
+        .status-badge.completed { background: rgba(148,163,184,.2); color: #94a3b8; }
+
+        .chat-container {
+            background: rgba(15,23,42,.72);
+            border-radius: 12px;
+            border: 1px solid rgba(148,163,184,.14);
+            backdrop-filter: blur(18px);
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(148,163,184,.14);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chat-header h2 {
+            color: white;
+            font-size: 20px;
+        }
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: rgba(2,7,17,.3);
+        }
+        .chat-message {
+            margin-bottom: 16px;
+            display: flex;
+        }
+        .chat-message.sent {
+            justify-content: flex-end;
+        }
+        .chat-message.received {
+            justify-content: flex-start;
+        }
+        .chat-message-bubble {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            line-height: 1.5;
+        }
+        .chat-message.sent .chat-message-bubble {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+        .chat-message.received .chat-message-bubble {
+            background: rgba(30,41,59,.8);
+            color: rgba(255,255,255,.9);
+            border: 1px solid rgba(148,163,184,.1);
+        }
+        .chat-message-time {
+            font-size: 11px;
+            color: rgba(255,255,255,.4);
+            margin-top: 4px;
+        }
+        .chat-input-container {
+            padding: 20px;
+            border-top: 1px solid rgba(148,163,184,.14);
+            display: flex;
+            gap: 10px;
+        }
+        .chat-input-container input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid rgba(148,163,184,.2);
+            border-radius: 8px;
+            font-size: 14px;
+            background: rgba(255,255,255,.05);
+            color: white;
+        }
+        .chat-input-container input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 10px rgba(59,130,246,.3);
+        }
+        .chat-input-container button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .chat-input-container button:hover {
+            box-shadow: 0 0 20px rgba(59,130,246,.4);
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: rgba(255,255,255,.4);
+        }
+
+        .platform-detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(148,163,184,.08);
+        }
+        .platform-detail-row:last-child {
+            border-bottom: none;
+        }
+        .platform-detail-label {
+            color: rgba(255,255,255,.5);
+            font-weight: 500;
+        }
+        .platform-detail-value {
+            color: rgba(255,255,255,.9);
+            font-weight: 500;
+        }
+        .platform-detail-value a {
+            color: #60a5fa;
+            text-decoration: none;
+        }
+        .platform-detail-value a:hover {
+            text-decoration: underline;
+        }
+
+        .content-ownership-card {
+            background: rgba(34,197,94,.1);
+            border: 1px solid rgba(34,197,94,.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .content-ownership-card h3 {
+            color: #4ade80;
+            margin: 0 0 10px 0;
+        }
+        .content-ownership-card p {
+            color: rgba(255,255,255,.8);
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .legal-disclaimer {
+            background: rgba(239,68,68,.1);
+            border: 1px solid rgba(239,68,68,.3);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 20px;
+        }
+        .legal-disclaimer p {
+            color: rgba(255,255,255,.7);
+            font-size: 13px;
+            margin: 0;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="dashboard-header-inner">
+                <div class="dashboard-logo">
+                    <span class="logo-cube">◈</span>
+                    My Platform Details
+                </div>
+                <nav class="dashboard-nav">
+                    <button class="active" onclick="switchSection('overview')">◈ Overview</button>
+                    <button onclick="switchSection('platform')">⬡ My Platform Details</button>
+                    <button onclick="switchSection('orders')">▣ My Orders</button>
+                    <button onclick="switchSection('new-order')">☆ New Order</button>
+                    <button onclick="switchSection('support')">◉ Support</button>
+                </nav>
+                <div class="dashboard-user">
+                    <div class="dashboard-user-info">
+                        <div class="dashboard-user-name" id="dashboardUserName">Client</div>
+                        <div class="dashboard-user-role">Platform Owner</div>
+                    </div>
+                    <div class="dashboard-user-avatar">C</div>
+                    <button class="dashboard-logout" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <main class="dashboard-content">
+            <!-- Overview Section -->
+            <section class="dashboard-section active" id="section-overview">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Total Orders</h3>
+                        <div class="value" id="statTotalOrders">0</div>
+                        <div class="trend">All your projects</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Active Projects</h3>
+                        <div class="value" id="statActiveOrders">0</div>
+                        <div class="trend">In progress</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Completed</h3>
+                        <div class="value" id="statCompletedOrders">0</div>
+                        <div class="trend">Successfully delivered</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Invested</h3>
+                        <div class="value" id="statTotalSpent">$0</div>
+                        <div class="trend">Platform investment</div>
+                    </div>
+                </div>
+
+                <div class="card" id="welcomeCard">
+                    <h2>Welcome to Your MaiCorp Platform</h2>
+                    <p style="color:rgba(255,255,255,.7);line-height:1.6;">You can track all your website orders here, submit new projects, and chat with our CEO anytime. Your completed platforms with full access details are available in the "My Platform Details" section.</p>
+                </div>
+            </section>
+
+            <!-- Platform Details Section -->
+            <section class="dashboard-section" id="section-platform">
+                <div id="platformDetailsContainer">
+                    <div class="no-data">Loading your platform details...</div>
+                </div>
+            </section>
+
+            <!-- Orders Section -->
+            <section class="dashboard-section" id="section-orders">
+                <div class="orders-table-container">
+                    <table class="orders-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Date</th>
+                                <th>Website Type</th>
+                                <th>Pages</th>
+                                <th>Status</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody">
+                            <tr><td colspan="6"><div class="no-data">No orders yet</div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- New Order Form -->
+            <section class="dashboard-section" id="section-new-order">
+                <div class="card">
+                    <h2>Create New Order</h2>
+                    <form onsubmit="submitOrder(event)">
+                        <div class="form-group">
+                            <label>Website Type</label>
+                            <div class="page-selector" id="websiteTypeSelector">
+                                <button type="button" class="active" onclick="selectWebsiteType(this,'Basic Website')">Basic Website</button>
+                                <button type="button" onclick="selectWebsiteType(this,'5-10 Page App')">5-10 Page App</button>
+                                <button type="button" onclick="selectWebsiteType(this,'Large Project (10-40 pages)')">Large Project (10-40 pages)</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Company Name</label>
+                            <input type="text" id="orderCompany" name="company" placeholder="Enter your company name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Contact Email</label>
+                            <input type="email" id="orderEmail" name="email" placeholder="you@company.com" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Number of Pages</label>
+                            <input type="number" id="orderPages" name="pages" placeholder="3" min="1" max="40" value="3" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Color Theme</label>
+                            <input type="text" id="orderTheme" name="theme" placeholder="e.g., Modern Dark, Classic Blue, Minimal White" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>What are the requirements?</label>
+                            <textarea id="orderDetails" name="details" placeholder="Describe your project requirements, features, and goals..." required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Hosting Options</label>
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="backendHosting" name="backend" value="yes">
+                                    <label for="backendHosting">Backend Server Hosting</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="frontendHosting" name="frontend" value="yes">
+                                    <label for="frontendHosting">Frontend Server Hosting</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="paymentOpt" name="paymentProcessor">
+                                    <label for="paymentOpt">Payment Processor Integration</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pricing-summary" id="pricingSummary" style="background:#f5f5f5;padding:20px;border-radius:8px;margin:20px 0;">
+                            <h3 style="margin-top:0;">Pricing Summary</h3>
+                            <div class="order-detail-row">
+                                <span class="order-detail-label">Setup Fee:</span>
+                                <span class="order-detail-value highlight" id="setupFee">$100</span>
+                            </div>
+                            <div class="order-detail-row">
+                                <span class="order-detail-label">Monthly Maintenance:</span>
+                                <span class="order-detail-value highlight" id="monthlyFee">$75/mo</span>
+                            </div>
+                            <div class="order-detail-row">
+                                <span class="order-detail-label">Backend Hosting:</span>
+                                <span class="order-detail-value" id="backendFee">+$50/mo (if selected)</span>
+                            </div>
+                            <div class="order-detail-row">
+                                <span class="order-detail-label">Frontend Hosting:</span>
+                                <span class="order-detail-value" id="frontendFee">+$20/mo (if selected)</span>
+                            </div>
+                            <div class="order-detail-row">
+                                <span class="order-detail-label">Payment Integration:</span>
+                                <span class="order-detail-value" id="paymentFee">+$100 setup (if selected)</span>
+                            </div>
+                            <div class="order-detail-row">
+                                <span class="order-detail-label">Total First Month:</span>
+                                <span class="order-detail-value highlight" id="totalFirstMonth" style="color:#1a1a2e;font-size:24px;">$245</span>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn--primary" style="width:100%;">Submit Order Request</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Customer Support Chat -->
+            <section class="dashboard-section" id="section-support">
+                <div class="card">
+                    <h2>Customer Support - Direct Chat with CEO</h2>
+                    <p style="color:#666;margin-bottom:20px;">Have questions or need immediate assistance? Chat directly with our CEO, Kain Towns.</p>
+                    
+                    <div class="chat-container" id="supportChat">
+                        <div class="chat-header">
+                            <h2>Chat with CEO - Kain Towns</h2>
+                        </div>
+                        <div class="chat-messages" id="supportChatMessages">
+                            <div class="chat-message received">
+                                <div class="chat-message-bubble">Hello! I'm Kain, the CEO of MaiCorp. How can I help you with your project today?</div>
+                                <div class="chat-message-time">Just now</div>
+                            </div>
+                        </div>
+                        <div class="chat-input-container">
+                            <input type="text" id="supportChatInput" placeholder="Type your message..." onkeypress="handleSupportChatKeypress(event)">
+                            <button onclick="sendSupportChatMessage()">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let selectedWebsiteType = 'Basic Website';
+
+        // Check auth
+        function checkAuth() {
+            const user = localStorage.getItem('maicorp_user');
+            if (!user) {
+                window.location.href = 'auth.html';
+                return;
+            }
+            currentUser = JSON.parse(user);
+            document.getElementById('dashboardUserName').textContent = currentUser.name || 'Client';
+            loadDashboardData();
+        }
+
+        function logout() {
+            localStorage.removeItem('maicorp_user');
+            window.location.href = 'auth.html';
+        }
+
+        // Switch sections
+        function switchSection(section) {
+            document.querySelectorAll('.dashboard-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.dashboard-nav button').forEach(btn => btn.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById('section-' + section).classList.add('active');
+        }
+
+        // Load dashboard data
+        function loadDashboardData() {
+            const orders = getClientOrders();
+            document.getElementById('statTotalOrders').textContent = orders.length;
+            document.getElementById('statActiveOrders').textContent = orders.filter(o => o.status === 'pending' || o.status === 'active').length;
+            document.getElementById('statCompletedOrders').textContent = orders.filter(o => o.status === 'completed').length;
+            
+            const total = orders.reduce((sum, o) => sum + (o.totalPrice || 0), 0);
+            document.getElementById('statTotalSpent').textContent = '$' + total.toLocaleString();
+            
+            loadOrdersTable();
+            loadPlatformDetails();
+        }
+
+        // Load clients for chat
+        function getClientOrders() {
+            const allOrders = getOrders();
+            return allOrders.filter(o => o.email === currentUser.email);
+        }
+
+        // Get all orders
+        function getOrders() {
+            const orders = localStorage.getItem('maicorp_orders');
+            return orders ? JSON.parse(orders) : [];
+        }
+
+        // Load orders table
+        function loadOrdersTable() {
+            const orders = getClientOrders();
+            const tbody = document.getElementById('ordersTableBody');
+            
+            if (orders.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6"><div class="no-data">No orders yet</div></td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = orders.map(order => `
+                <tr>
+                    <td>#${order.id}</td>
+                    <td>${formatDate(order.createdAt)}</td>
+                    <td>${escapeHtml(order.websiteType)}</td>
+                    <td>${escapeHtml(order.pages)}</td>
+                    <td><span class="status-badge ${order.status || 'pending'}">${(order.status || 'PENDING').toUpperCase()}</span></td>
+                    <td>$${order.totalPrice || 0}</td>
+                </tr>
+            `).join('');
+        }
+
+        // Select website type
+        function selectWebsiteType(btn, type) {
+            selectedWebsiteType = type;
+            document.querySelectorAll('#websiteTypeSelector button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            updatePricing();
+        }
+
+        // Update pricing
+        function updatePricing() {
+            let setupFee = 100;
+            let monthlyFee = 75;
+            
+            if (selectedWebsiteType === '5-10 Page App') {
+                setupFee = 200;
+                monthlyFee = 150;
+            } else if (selectedWebsiteType === 'Large Project (10-40 pages)') {
+                setupFee = 400;
+                monthlyFee = 250;
+            }
+
+            const backend = document.getElementById('backendHosting').checked;
+            const frontend = document.getElementById('frontendHosting').checked;
+            const payment = document.getElementById('paymentOpt').checked;
+
+            const backendCost = backend ? 50 : 0;
+            const frontendCost = frontend ? 20 : 0;
+            const paymentCost = payment ? 100 : 0;
+
+            const total = setupFee + paymentCost + monthlyFee + backendCost + frontendCost;
+            const monthly = monthlyFee + backendCost + frontendCost;
+
+            document.getElementById('setupFee').textContent = '$' + setupFee;
+            document.getElementById('monthlyFee').textContent = '$' + monthly + '/mo';
+            document.getElementById('backendFee').textContent = backend ? '+$' + backendCost + '/mo' : '+$0';
+            document.getElementById('frontendFee').textContent = frontend ? '+$' + frontendCost + '/mo' : '+$0';
+            document.getElementById('paymentFee').textContent = payment ? '+$100 setup' : '+$0';
+            document.getElementById('totalFirstMonth').textContent = '$' + total;
+        }
+
+        // Submit order
+        function submitOrder(e) {
+            e.preventDefault();
+            
+            const order = {
+                id: 'ORD-' + Date.now(),
+                name: document.getElementById('orderCompany').value,
+                email: document.getElementById('orderEmail').value,
+                pages: document.getElementById('orderPages').value,
+                theme: document.getElementById('orderTheme').value,
+                details: document.getElementById('orderDetails').value,
+                backend: document.getElementById('backendHosting').checked ? 'yes' : 'no',
+                frontend: document.getElementById('frontendHosting').checked ? 'yes' : 'no',
+                paymentProcessor: document.getElementById('paymentOpt').checked ? 'Requested' : 'None',
+                websiteType: selectedWebsiteType,
+                setupPrice: parseFloat(document.getElementById('setupFee').textContent.replace('$', '')),
+                monthlyPrice: parseFloat(document.getElementById('monthlyFee').textContent.replace('$', '').replace('/mo', '')),
+                totalPrice: parseFloat(document.getElementById('totalFirstMonth').textContent.replace('$', '')),
+                status: 'pending',
+                createdAt: new Date().toISOString(),
+                userId: currentUser.id
+            };
+
+            const orders = getOrders();
+            orders.push(order);
+            localStorage.setItem('maicorp_orders', JSON.stringify(orders));
+
+            // Also save as submission
+            const submissions = getSubmissions();
+            submissions.unshift({
+                id: Date.now().toString(),
+                name: order.name,
+                email: order.email,
+                message: `New Order: ${order.websiteType}\nPages: ${order.pages}\nTheme: ${order.theme}\nDetails: ${order.details}`,
+                status: 'new',
+                createdAt: new Date().toISOString()
+            });
+            localStorage.setItem('maicorp_submissions', JSON.stringify(submissions));
+
+            // Increment user's website count
+            currentUser.websiteCount = (currentUser.websiteCount || 0) + 1;
+            const users = getAllUsers();
+            const idx = users.findIndex(u => u.id === currentUser.id);
+            if (idx >= 0) {
+                users[idx] = currentUser;
+            }
+            localStorage.setItem('maicorp_users', JSON.stringify(users));
+            localStorage.setItem('maicorp_user', JSON.stringify(currentUser));
+
+            alert('Order submitted successfully! The CEO will review your request and get back to you soon.');
+            document.getElementById('new-order-form').reset();
+            switchSection('orders');
+            loadDashboardData();
+        }
+
+        // Get submissions
+        function getSubmissions() {
+            const subs = localStorage.getItem('maicorp_submissions');
+            return subs ? JSON.parse(subs) : [];
+        }
+
+        // Get all users
+        function getAllUsers() {
+            const users = localStorage.getItem('maicorp_users');
+            return users ? JSON.parse(users) : [];
+        }
+
+        // Support chat
+        function getChats() {
+            const chats = localStorage.getItem('maicorp_chats');
+            return chats ? JSON.parse(chats) : [];
+        }
+
+        function saveChat(message) {
+            const chats = getChats();
+            chats.push(message);
+            localStorage.setItem('maicorp_chats', JSON.stringify(chats));
+        }
+
+        function sendSupportChatMessage() {
+            const input = document.getElementById('supportChatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+
+            const chat = {
+                id: Date.now().toString(),
+                from: currentUser.email,
+                to: 'kain.towns@maicorp.online',
+                message: message,
+                createdAt: new Date().toISOString()
+            };
+
+            saveChat(chat);
+            
+            const container = document.getElementById('supportChatMessages');
+            container.innerHTML += `
+                <div class="chat-message sent">
+                    <div class="chat-message-bubble">${escapeHtml(message)}</div>
+                    <div class="chat-message-time">${formatDate(chat.createdAt, 'time')}</div>
+                </div>
+            `;
+            
+            input.value = '';
+            container.scrollTop = container.scrollHeight;
+
+            // Simulate CEO response after a delay
+            setTimeout(() => {
+                const responses = [
+                    "Thanks for your message! I'll review your request and get back to you shortly.",
+                    "I've received your message and will respond as soon as possible.",
+                    "Great question! Let me review your details and I'll send you a comprehensive response.",
+                    "Thanks for reaching out! I'll be in touch soon with more information."
+                ];
+                const response = responses[Math.floor(Math.random() * responses.length)];
+                
+                const ceoChat = {
+                    id: Date.now().toString(),
+                    from: 'kain.towns@maicorp.online',
+                    to: currentUser.email,
+                    message: response,
+                    createdAt: new Date().toISOString()
+                };
+                
+                saveChat(ceoChat);
+                container.innerHTML += `
+                    <div class="chat-message received">
+                        <div class="chat-message-bubble">${escapeHtml(response)}</div>
+                        <div class="chat-message-time">${formatDate(ceoChat.createdAt, 'time')}</div>
+                    </div>
+                `;
+                container.scrollTop = container.scrollHeight;
+            }, 2000 + Math.random() * 2000);
+        }
+
+        function handleSupportChatKeypress(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendSupportChatMessage();
+            }
+        }
+
+        // Load Platform Details for Client
+        function loadPlatformDetails() {
+            const handoffs = getHandoffs();
+            const myHandoffs = handoffs.filter(h => h.client_admin_email === currentUser.email || h.client_id === currentUser.id);
+            const container = document.getElementById('platformDetailsContainer');
+            
+            if (myHandoffs.length === 0) {
+                container.innerHTML = '<div class="no-data">No completed platforms yet. Your platform details will appear here once your project is delivered.</div>';
+                return;
+            }
+
+            container.innerHTML = myHandoffs.map(h => `
+                <div class="card">
+                    <h2>${escapeHtml(h.business_name)} <span class="badge">PLATFORM HANDOFF</span></h2>
+                    
+                    <div class="platform-detail-row">
+                        <span class="platform-detail-label">Platform Name</span>
+                        <span class="platform-detail-value">${escapeHtml(h.platform_name)}</span>
+                    </div>
+                    <div class="platform-detail-row">
+                        <span class="platform-detail-label">Platform URL</span>
+                        <span class="platform-detail-value"><a href="${escapeHtml(h.platform_url)}" target="_blank">${escapeHtml(h.platform_url)}</a></span>
+                    </div>
+                    <div class="platform-detail-row">
+                        <span class="platform-detail-label">Admin Login URL</span>
+                        <span class="platform-detail-value"><a href="${escapeHtml(h.admin_login_url)}" target="_blank">${escapeHtml(h.admin_login_url)}</a></span>
+                    </div>
+                    <div class="platform-detail-row">
+                        <span class="platform-detail-label">Package Type</span>
+                        <span class="platform-detail-value">${escapeHtml(h.package_type)}</span>
+                    </div>
+                    
+                    <hr style="border:none;border-top:1px solid rgba(148,163,184,.1);margin:20px 0;">
+                    
+                    <h3 style="color:#60a5fa;margin-bottom:12px;">Payment & Support</h3>
+                    
+                    <div class="platform-detail-row">
+                        <span class="platform-detail-label">PayPal Setup</span>
+                        <span class="platform-detail-value">${escapeHtml(h.paypal_setup_status || 'Not Started')}</span>
+                    </div>
+                    <div class="platform-detail-row">
+                        <span class="platform-detail-label">Maintenance Plan</span>
+                        <span class="platform-detail-value">${escapeHtml(h.maintenance_plan || 'N/A')}</span>
+                    </div>
+                    <div class="platform-detail-row">
+                        <span class="platform-detail-label">Monthly Support Fee</span>
+                        <span class="platform-detail-value">$${h.monthly_support_fee || 0}</span>
+                    </div>
+                    <div class="platform-detail-row">
+                        <span class="platform-detail-label">Renewal Date</span>
+                        <span class="platform-detail-value">${h.renewal_date || 'N/A'}</span>
+                    </div>
+                    
+                    <hr style="border:none;border-top:1px solid rgba(148,163,184,.1);margin:20px 0;">
+                    
+                    <h3 style="color:#60a5fa;margin-bottom:12px;">Included Features</h3>
+                    <div style="margin-bottom:16px;color:rgba(255,255,255,.8);">
+                        ${h.included_features?.map(f => `<span style="display:inline-block;background:rgba(59,130,246,.2);padding:4px 12px;border-radius:20px;font-size:12px;margin:4px;">${escapeHtml(f)}</span>`).join('') || 'N/A'}
+                    </div>
+                    
+                    <hr style="border:none;border-top:1px solid rgba(148,163,184,.1);margin:20px 0;">
+                    
+                    <h3 style="color:#60a5fa;margin-bottom:12px;">Client Next Steps</h3>
+                    <p style="color:rgba(255,255,255,.8);line-height:1.6;margin-bottom:16px;">${escapeHtml(h.client_next_steps || 'Contact support for next steps.')}</p>
+                    
+                    <div class="content-ownership-card">
+                        <h3>✓ Content Ownership Confirmed</h3>
+                        <p><strong>Client retains ownership</strong> of all original content, branding, images, service descriptions, pricing, customer information, uploads, and business materials provided to or uploaded into the platform. MaiCorp does not claim ownership of client content. MaiCorp provides platform development, hosting, management, support, and technical infrastructure services.</p>
+                    </div>
+                    
+                    <div class="legal-disclaimer">
+                        <p><strong>Important:</strong> MaiCorp provides technical services and platform management. Clients are responsible for their business operations, customer communications, products, services, taxes, refunds, and legal compliance unless otherwise agreed in writing.</p>
+                    </div>
+                    
+                    <div style="margin-top:24px;display:flex;gap:12px;">
+                        <button onclick="copyPlatformUrl('${escapeHtml(h.platform_url)}')" style="padding:10px 20px;background:rgba(59,130,246,.2);color:#60a5fa;border:1px solid rgba(59,130,246,.3);border-radius:8px;cursor:pointer;">Copy Platform URL</button>
+                        <button onclick="copyAdminUrl('${escapeHtml(h.admin_login_url)}')" style="padding:10px 20px;background:rgba(59,130,246,.2);color:#60a5fa;border:1px solid rgba(59,130,246,.3);border-radius:8px;cursor:pointer;">Copy Admin URL</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getHandoffs() {
+            const handoffs = localStorage.getItem('maicorp_handoffs');
+            return handoffs ? JSON.parse(handoffs) : [];
+        }
+
+        function copyPlatformUrl(url) {
+            navigator.clipboard.writeText(url).then(() => {
+                alert('Platform URL copied to clipboard!');
+            });
+        }
+
+        function copyAdminUrl(url) {
+            navigator.clipboard.writeText(url).then(() => {
+                alert('Admin URL copied to clipboard!');
+            });
+        }
+
+        // One Free UI Change Policy
+        const UI_POLICY_NOTICE = `
+<div class="card" style="margin-top:20px;">
+    <h3 style="color:#fbbf24;">⚡ UI Change Policy</h3>
+    <p style="color:rgba(255,255,255,.8);margin:0;">1 free UI change is included after project completion. Additional UI changes are $30 per request. Major redesigns require a custom quote.</p>
+</div>`;
+
+        // Utilities
+        function formatDate(dateStr, type = 'date') {
+            const date = new Date(dateStr);
+            if (type === 'time') {
+                return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+            }
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const map = {
+                '&': '&amp;', '<': '&lt;', '>': '&gt;',
+                '"': '&quot;', "'": '&#039;'
+            };
+            return String(text).replace(/[&<>"']/g, m => map[m]);
+        }
+
+        // Initialize
+        checkAuth();
+        
+        // Update pricing on page load
+        setTimeout(updatePricing, 100);
+        document.getElementById('backendHosting').addEventListener('change', updatePricing);
+        document.getElementById('frontendHosting').addEventListener('change', updatePricing);
+        document.getElementById('paymentOpt').addEventListener('change', updatePricing);
+        document.getElementById('orderPages').addEventListener('change', updatePricing);
+    </script>
+</body>
+</html>
